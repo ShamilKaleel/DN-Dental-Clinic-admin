@@ -41,6 +41,9 @@ export default function LoginPage() {
         {
           username: data.username,
           password: data.password,
+        },
+        {
+          withCredentials: true,
         }
       );
 
