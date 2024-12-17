@@ -10,7 +10,7 @@ export default function DashboardPage() {
 
       <div>
         {state.isAuthenticated ? (
-          <Button onClick={logout}>Logout</Button>
+          <Button onClick={logout}>Logout {state.user?.username} </Button>
         ) : (
           <Button onClick={() => login("username", "password")}>Login</Button>
         )}

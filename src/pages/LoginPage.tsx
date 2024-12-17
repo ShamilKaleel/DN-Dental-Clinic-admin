@@ -6,8 +6,9 @@ import Lorder from "@/Component/Lorder";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "@/hooks/useAuth";
 // Schema validation using Zod
 const schema = z.object({
   username: z.string(),
@@ -18,6 +19,10 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  // Get the login function from the AuthContext
+  const { login, state } = useAuth();
+
   // Initialize React Hook Form with Zod resolver and default values
   const {
     register,
@@ -35,20 +40,9 @@ export default function LoginPage() {
   // Function to handle form submission
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      // Send a POST request to the login API endpoint
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/signin",
-        {
-          username: data.username,
-          password: data.password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await login(data.username, data.password);
 
-      console.log(response.data);
-      alert("Login successful!");
+      navigate("/");
     } catch (error: any) {
       // Handle API error response
       setError("root", {
@@ -61,7 +55,9 @@ export default function LoginPage() {
   return (
     <div className="flex justify-center w-full h-screen items-center">
       <Card className="px-8 py-16">
-        <h1 className="text-2xl font-bold text-center mb-5">Login</h1>
+        <h1 className="text-2xl font-bold text-center mb-5">
+          Login {state.isAuthenticated && state.user?.username}
+        </h1>
 
         {/* Form for email and password input */}
         <form
@@ -113,7 +109,7 @@ export default function LoginPage() {
               </Link>
             </p>
 
-            <p className=" text-start text-red-500  pl-1 absolute top-20">
+            <p className=" text-center text-red-500  pl-1 absolute top-32 left-0 right-0">
               {errors.root?.message}
             </p>
           </div>
