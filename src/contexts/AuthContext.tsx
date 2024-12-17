@@ -7,16 +7,22 @@ import {
 } from "react";
 import axios from "axios";
 
-// Define the initial state and its type
-type AuthState = {
-  user: { username: string; roles: string[] } | null;
+interface User {
+  username: string | null;
+  roles: string[] | null;
+}
 
+// Define the initial state and its type
+interface AuthState {
+  user: { username: string; roles: string[] } | null;
   isAuthenticated: boolean;
-};
+}
 const initialState: AuthState = {
   user: null,
+
   isAuthenticated: false,
 };
+
 // Define action types and payloads
 type AuthAction =
   | {
@@ -39,10 +45,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         isAuthenticated: true,
       };
     case "LOGOUT":
-      return {
-        user: null,
-        isAuthenticated: false,
-      };
+      return initialState;
     case "SIGNUP_SUCCESS":
       return state; // Add any signup success logic if needed
     default:
@@ -61,52 +64,47 @@ export const AuthContext = createContext<{
     roles: string[]
   ) => Promise<void>;
   isLording: boolean;
+  authState: User | null;
+  setIsLording: any;
 }>(null!);
 
 // AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const [isLording, setIsLording] = useState(false);
-
+  const [authState, setAuthState] = useState<User | null>(null);
+  const [isLording, setIsLording] = useState(true);
   // Rehydrate authentication state from localStorage on app load
   useEffect(() => {
-    if (!state.user) {
-      console.log("user start", state.user);
-      axios
-        .get("http://localhost:8080/api/auth/user")
-        .then(({ data }) => {
-          const { username: user, roles } = data;
-          dispatch({
-            type: "LOGIN_SUCCESS",
-            payload: {
-              user: { username: user, roles },
-              isAuthenticated: true,
-            },
-          });
-          console.log("user end", state.user);
-        })
-        .catch((error: any) => {
-          console.log(error.response.data);
-        });
+    if (!authState) {
+      setIsLording(true);
+      console.log("user start", authState);
+      const storedAuthState = localStorage.getItem("authState");
+
+      if (storedAuthState) {
+        console.log("local storage", JSON.parse(storedAuthState));
+
+        setAuthState(JSON.parse(storedAuthState));
+      }
+
+      // axios
+      //   .get("http://localhost:8080/api/auth/user")
+      //   .then(({ data }) => {
+      //     const { username, roles } = data;
+      //     dispatch({
+      //       type: "LOGIN_SUCCESS",
+      //       payload: {
+      //         user: { username, roles },
+      //         isAuthenticated: true,
+      //       },
+      //     });
+      //     console.log("user end", state.user);
+      //   })
+      //   .catch((error: any) => {
+      //     console.log(error.response.data);
+      //   });
+      setIsLording(false);
     }
-
-    // const storedState = localStorage.getItem("authState");
-
-    // if (storedState) {
-    //   const parsedState: AuthState = JSON.parse(storedState);
-    //   console.log("hi", state.isAuthenticated, state.user);
-    //   dispatch({
-    //     type: "LOGIN_SUCCESS",
-    //     payload: {
-    //       user: parsedState.user!,
-    //       isAuthenticated: true,
-    //     },
-    //   });
-    //   console.log("bye", state.isAuthenticated);
-    // } else {
-    //   console.log("No stored state found in localStorage");
-    // }
-  }, []);
+  }, [authState]);
 
   // Login function
   const login = async (name: string, password: string) => {
@@ -124,30 +122,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
 
       const { username, roles } = response.data;
-      console.log("response", response.data);
-      console.log("response", response.data);
-      // Persist state to localStorage
+      localStorage.setItem("authState", JSON.stringify(response.data));
 
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          user: { username, roles },
-          isAuthenticated: true,
-        },
-      });
-
-      console.log("login", state.user);
+      setAuthState({ username, roles });
+      // dispatch({
+      //   type: "LOGIN_SUCCESS",
+      //   payload: {
+      //     user: { username, roles },
+      //     isAuthenticated: true,
+      //   },
+      // });
     } catch (error: any) {
       console.error("Login failed", error);
       throw error.response?.data?.message || "Invalid credentials";
     } finally {
       setIsLording(false);
+      console.log("finally", state.user);
     }
   };
 
   // Logout function
   const logout = async () => {
-    // Clear localStorage
     setIsLording(true);
     try {
       const response = await axios.post(
@@ -156,7 +151,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.log("logout", response.data);
       localStorage.removeItem("authState");
-      dispatch({ type: "LOGOUT" });
+      // dispatch({ type: "LOGOUT" });
+      setAuthState(null);
     } catch (error: any) {
       console.error("Logout failed", error);
       throw error.response?.data?.error || "Logout error";
@@ -184,8 +180,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Log the user when state.user changes
+  useEffect(() => {
+    if (authState) {
+      console.log("Logged in user:", authState);
+    } else {
+      console.log("No user logged in.");
+    }
+    setIsLording(false);
+  }, [authState]);
+
   return (
-    <AuthContext.Provider value={{ state, login, logout, signup, isLording }}>
+    <AuthContext.Provider
+      value={{
+        state,
+        login,
+        logout,
+        signup,
+        isLording,
+        authState,
+        setIsLording,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

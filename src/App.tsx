@@ -24,7 +24,7 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const { state } = useAuth();
+  const { authState, isLording } = useAuth();
   return (
     <Router>
       <Routes>
@@ -33,16 +33,14 @@ export default function App() {
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            state.isAuthenticated ? (
-              <DashboardPage />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        {!isLording && (
+          <Route
+            path="/"
+            element={
+              authState ? <Dashboard /> : <Navigate to="/login" replace />
+            }
+          />
+        )}
 
         <Route path="/booking" element={<DataTableDemo />} />
         <Route path="/dashboard" element={<Dashboard />} />

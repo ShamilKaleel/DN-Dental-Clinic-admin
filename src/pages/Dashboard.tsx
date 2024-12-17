@@ -33,8 +33,19 @@ import { ModeToggle } from "@/components/mode-toggle";
 import DataTableDemo from "./DataTableDemo";
 import Orders from "@/components/features/orders";
 import AdminSearch from "@/components/features/admin-search";
-
+import { useAuth } from "@/hooks/useAuth";
+import Lorder from "@/Component/Lorder";
 export default function Dashboard() {
+  const { logout, isLording, setIsLording } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+    }
+  };
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -92,7 +103,7 @@ export default function Dashboard() {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Card x-chunk="dashboard-02-chunk-0">
+            {/* <Card x-chunk="dashboard-02-chunk-0">
               <CardHeader className="p-2 pt-0 md:p-4">
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>
@@ -105,7 +116,7 @@ export default function Dashboard() {
                   Upgrade
                 </Button>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>
@@ -205,7 +216,9 @@ export default function Dashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleLogout()}>
+                {isLording ? <Lorder /> : "Logout"}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

@@ -5,11 +5,9 @@ import App from "./App.tsx";
 import { AuthProvider } from "./contexts/authContext.tsx";
 import { ThemeProvider } from "./components/theme-provider.tsx";
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <AuthProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </AuthProvider>
-  </StrictMode>
+  <AuthProvider>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </AuthProvider>
 );

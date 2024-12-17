@@ -2,15 +2,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
-  const { state, login, logout } = useAuth();
+  const { authState, login, logout } = useAuth();
   return (
     <div>
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
       <p>Welcome to your admin dashboard!</p>
 
       <div>
-        {state.isAuthenticated ? (
-          <Button onClick={logout}>Logout {state.user?.username} </Button>
+        {authState ? (
+          <button onClick={logout}>Logout {authState.username} </button>
         ) : (
           <Button onClick={() => login("username", "password")}>Login</Button>
         )}
