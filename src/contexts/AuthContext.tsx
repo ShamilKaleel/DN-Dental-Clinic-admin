@@ -126,6 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { username, roles } = response.data;
       console.log("response", response.data);
       console.log("response", response.data);
+      console.log("response", response.data);
       // Persist state to localStorage
 
       dispatch({
