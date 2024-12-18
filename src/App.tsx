@@ -12,9 +12,9 @@ import { useAuth } from "@/hooks/useAuth";
 import DataTableDemo from "@/pages/DataTableDemo";
 import Dashboard from "@/pages/Dashboard";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const { state } = useAuth();
+  const { authState, isLording } = useAuth();
 
-  if (!state.isAuthenticated) {
+  if (!authState && !isLording) {
     console.log("ProtectedRoute: User is not authenticated");
     // Redirect to login if the user is not authenticated
     return <Navigate to="/login" replace />;
@@ -24,7 +24,7 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const { authState, isLording } = useAuth();
+  //const { authState, isLording } = useAuth();
   return (
     <Router>
       <Routes>
@@ -33,14 +33,23 @@ export default function App() {
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected Routes */}
-        {!isLording && (
+        {/* {!isLording && (
           <Route
             path="/"
             element={
               authState ? <Dashboard /> : <Navigate to="/login" replace />
             }
           />
-        )}
+        )} */}
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="/booking" element={<DataTableDemo />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -21,7 +21,7 @@ type FormValues = z.infer<typeof schema>;
 export default function LoginPage() {
   const navigate = useNavigate();
   // Get the login function from the AuthContext
-  const { login, state } = useAuth();
+  const { login } = useAuth();
 
   // Initialize React Hook Form with Zod resolver and default values
   const {
@@ -55,9 +55,7 @@ export default function LoginPage() {
   return (
     <div className="flex justify-center w-full h-screen items-center">
       <Card className="px-8 py-16">
-        <h1 className="text-2xl font-bold text-center mb-5">
-          Login {state.isAuthenticated && state.user?.username}
-        </h1>
+        <h1 className="text-2xl font-bold text-center mb-5">Login</h1>
 
         {/* Form for email and password input */}
         <form

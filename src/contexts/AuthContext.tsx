@@ -12,50 +12,9 @@ interface User {
   roles: string[] | null;
 }
 
-// Define the initial state and its type
-interface AuthState {
-  user: { username: string; roles: string[] } | null;
-  isAuthenticated: boolean;
-}
-const initialState: AuthState = {
-  user: null,
-
-  isAuthenticated: false,
-};
-
-// Define action types and payloads
-type AuthAction =
-  | {
-      type: "LOGIN_SUCCESS";
-      payload: {
-        user: { username: string; roles: string[] };
-        isAuthenticated: boolean;
-      };
-    }
-  | { type: "LOGOUT" }
-  | { type: "SIGNUP_SUCCESS" };
-
-// Reducer function
-function authReducer(state: AuthState, action: AuthAction): AuthState {
-  switch (action.type) {
-    case "LOGIN_SUCCESS":
-      return {
-        ...state,
-        user: action.payload.user,
-        isAuthenticated: true,
-      };
-    case "LOGOUT":
-      return initialState;
-    case "SIGNUP_SUCCESS":
-      return state; // Add any signup success logic if needed
-    default:
-      return state;
-  }
-}
-
 // Create context
 export const AuthContext = createContext<{
-  state: AuthState;
+  authState: User | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (
@@ -64,15 +23,14 @@ export const AuthContext = createContext<{
     roles: string[]
   ) => Promise<void>;
   isLording: boolean;
-  authState: User | null;
   setIsLording: any;
 }>(null!);
 
 // AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
   const [authState, setAuthState] = useState<User | null>(null);
   const [isLording, setIsLording] = useState(true);
+
   // Rehydrate authentication state from localStorage on app load
   useEffect(() => {
     if (!authState) {
@@ -122,22 +80,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
 
       const { username, roles } = response.data;
-      localStorage.setItem("authState", JSON.stringify(response.data));
+      localStorage.setItem("authState", JSON.stringify({ username, roles }));
 
       setAuthState({ username, roles });
-      // dispatch({
-      //   type: "LOGIN_SUCCESS",
-      //   payload: {
-      //     user: { username, roles },
-      //     isAuthenticated: true,
-      //   },
-      // });
     } catch (error: any) {
       console.error("Login failed", error);
       throw error.response?.data?.message || "Invalid credentials";
     } finally {
       setIsLording(false);
-      console.log("finally", state.user);
+      console.log("finally", authState?.username);
     }
   };
 
@@ -173,7 +124,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
         roles,
       });
-      dispatch({ type: "SIGNUP_SUCCESS" });
     } catch (error: any) {
       console.error("Signup failed", error);
       throw error.response?.data?.message || "Signup error";
@@ -193,7 +143,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
-        state,
         login,
         logout,
         signup,
