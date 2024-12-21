@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useReducer,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 
 interface User {
@@ -79,9 +73,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       );
 
-      const { username, roles } = response.data;
+      const { username, roles, jwtToken } = response.data;
+      const token = jwtToken.match(/dn_dental_clinic=([^;]+)/)[1];
+      console.log("login", response.data);
       localStorage.setItem("authState", JSON.stringify({ username, roles }));
-
+      localStorage.setItem("dn_dental_clinic", JSON.stringify(token));
       setAuthState({ username, roles });
     } catch (error: any) {
       console.error("Login failed", error);
@@ -102,6 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.log("logout", response.data);
       localStorage.removeItem("authState");
+      localStorage.removeItem("dn_dental_clinic");
       // dispatch({ type: "LOGOUT" });
       setAuthState(null);
     } catch (error: any) {

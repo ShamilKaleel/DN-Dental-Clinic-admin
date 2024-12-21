@@ -7,10 +7,17 @@ import {
 import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
-import DashboardPage from "@/pages/DashboardPage";
+import DashboardPage from "@/pages/DashboardPage1";
 import { useAuth } from "@/hooks/useAuth";
 import DataTableDemo from "@/pages/DataTableDemo";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/DashboardPage";
+import AdminPage from "@/pages/AdminPage";
+import DentistPage from "@/pages/DentistPage";
+import PatientPage from "@/pages/PatientPage";
+import ReceptionistPage from "@/pages/ReceptionistPage";
+import SchedulePage from "@/pages/SchedulePage";
+import AppointmentListPage from "@/pages/AppointmentListPage";
+import TestPage from "@/pages/Booking/TestPage";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -49,10 +56,18 @@ export default function App() {
               <Dashboard />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<DataTableDemo />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/dentist" element={<DentistPage />} />
+          <Route path="/patient" element={<PatientPage />} />
+          <Route path="/receptionist" element={<ReceptionistPage />} />
+          <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/appointment-list" element={<AppointmentListPage />} />
+        </Route>
 
         <Route path="/booking" element={<DataTableDemo />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/test" element={<TestPage />} />
         {/* <Route path="/" element={<DashboardPage />} /> */}
 
         {/* Error Page */}
