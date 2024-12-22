@@ -7,7 +7,6 @@ import {
 import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
-import DashboardPage from "@/pages/DashboardPage1";
 import { useAuth } from "@/hooks/useAuth";
 import DataTableDemo from "@/pages/DataTableDemo";
 import Dashboard from "@/pages/DashboardPage";
@@ -18,6 +17,7 @@ import ReceptionistPage from "@/pages/ReceptionistPage";
 import SchedulePage from "@/pages/SchedulePage";
 import AppointmentListPage from "@/pages/AppointmentListPage";
 import TestPage from "@/pages/Booking/TestPage";
+
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -31,12 +31,21 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  //const { authState, isLording } = useAuth();
+  const { authState, isLording } = useAuth();
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            !authState && !isLording ? (
+              <LoginPage />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected Routes */}

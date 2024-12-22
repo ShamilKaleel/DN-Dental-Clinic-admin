@@ -62,7 +62,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("dn_dental_clinic")}`,
+            // Authorization: `Bearer ${localStorage.getItem("dn_dental_clinic")}`,
           },
           withCredentials: true,
         }

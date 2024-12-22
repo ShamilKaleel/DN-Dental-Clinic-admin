@@ -25,36 +25,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authState, setAuthState] = useState<User | null>(null);
   const [isLording, setIsLording] = useState(true);
 
-  // Rehydrate authentication state from localStorage on app load
   useEffect(() => {
     if (!authState) {
       setIsLording(true);
       console.log("user start", authState);
-      const storedAuthState = localStorage.getItem("authState");
 
-      if (storedAuthState) {
-        console.log("local storage", JSON.parse(storedAuthState));
-
-        setAuthState(JSON.parse(storedAuthState));
-      }
-
-      // axios
-      //   .get("http://localhost:8080/api/auth/user")
-      //   .then(({ data }) => {
-      //     const { username, roles } = data;
-      //     dispatch({
-      //       type: "LOGIN_SUCCESS",
-      //       payload: {
-      //         user: { username, roles },
-      //         isAuthenticated: true,
-      //       },
-      //     });
-      //     console.log("user end", state.user);
-      //   })
-      //   .catch((error: any) => {
-      //     console.log(error.response.data);
-      //   });
-      setIsLording(false);
+      axios
+        .get("http://localhost:8080/api/auth/user", { withCredentials: true })
+        .then(({ data }) => {
+          const { username, roles } = data;
+          setAuthState({ username, roles });
+          console.log("User fetched successfully:", username);
+        })
+        .catch((error) => {
+          console.error(
+            "Error fetching user data:",
+            error.response?.data || error.message
+          );
+        })
+        .finally(() => {
+          setIsLording(false);
+        });
     }
   }, [authState]);
 
@@ -73,11 +64,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       );
 
-      const { username, roles, jwtToken } = response.data;
-      const token = jwtToken.match(/dn_dental_clinic=([^;]+)/)[1];
-      console.log("login", response.data);
-      localStorage.setItem("authState", JSON.stringify({ username, roles }));
-      localStorage.setItem("dn_dental_clinic", JSON.stringify(token));
+      const { username, roles } = response.data;
+
       setAuthState({ username, roles });
     } catch (error: any) {
       console.error("Login failed", error);
@@ -93,13 +81,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLording(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/signout"
+        "http://localhost:8080/api/auth/signout",
+        {},
+        { withCredentials: true }
       );
 
       console.log("logout", response.data);
-      localStorage.removeItem("authState");
-      localStorage.removeItem("dn_dental_clinic");
-      // dispatch({ type: "LOGOUT" });
       setAuthState(null);
     } catch (error: any) {
       console.error("Logout failed", error);
@@ -126,16 +113,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error.response?.data?.message || "Signup error";
     }
   };
-
-  // Log the user when state.user changes
-  useEffect(() => {
-    if (authState) {
-      console.log("Logged in user:", authState);
-    } else {
-      console.log("No user logged in.");
-    }
-    setIsLording(false);
-  }, [authState]);
 
   return (
     <AuthContext.Provider

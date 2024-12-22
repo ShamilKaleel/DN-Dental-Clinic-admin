@@ -1,17 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import {
-  Bell,
-  CircleUser,
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  ShoppingCart,
-  Users,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
+import { Bell, CircleUser, Menu, Package2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,12 +12,16 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useAuth } from "@/hooks/useAuth";
-import Lorder from "@/Component/Lorder";
 import { navLinks } from "@/constant";
 import { Outlet } from "react-router-dom";
 import Logo from "@/assets/images/Logo.png";
+
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import { useState } from "react";
+
 export default function DashboardPage() {
-  const { logout, isLording } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -115,13 +107,14 @@ export default function DashboardPage() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-              <nav className="grid gap-2 text-lg font-medium">
+              <nav className="grid gap-2 text-lg font-medium relative">
                 <Link
-                  to="#"
-                  className="flex items-center gap-2 text-lg font-semibold"
+                  to="/"
+                  className=" flex flex-col items-center gap-2 text-lg font-semibold"
                 >
-                  <Package2 className="h-6 w-6" />
-                  <span className="sr-only">Acme Inc</span>
+                  <img src={Logo} className="h-20 w-20" />
+
+                  <span className="text-4xl ">DN Dental Clinic</span>
                 </Link>
 
                 {navLinks.map((link) => (
@@ -185,14 +178,38 @@ export default function DashboardPage() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleLogout()}>
-                {isLording ? <Lorder /> : "Logout"}
+              <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
 
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          <ResponsiveDialog
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            title="Logout"
+            description="Are you sure you want to log out?"
+          >
+            <div className=" grid grid-flow-col gap-5 px-4">
+              <Button
+                onClick={() => setIsOpen(false)}
+                variant="outline"
+                className="w-full"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="default"
+                className="w-full"
+              >
+                Logout
+              </Button>
+            </div>
+          </ResponsiveDialog>
+
           <Outlet />
         </main>
       </div>
