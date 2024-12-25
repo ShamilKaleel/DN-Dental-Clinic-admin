@@ -64,10 +64,10 @@ export const columns: ColumnDef<Booking>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title="Email" className="" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] ">{row.getValue("email")}</div>
+      <div className="w-[170px] bg-red-500">{row.getValue("email")}</div>
     ),
   },
 
@@ -77,7 +77,7 @@ export const columns: ColumnDef<Booking>[] = [
       const booking = row.original;
 
       return (
-        <div className="w-[100px] text-right ">
+        <div className=" text-center ">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">

@@ -13,7 +13,7 @@ export default function BookingPage() {
       </div>
     );
   return (
-    <section className="flex flex-col   ">
+    <section className="flex flex-col ">
       <div className="px-2 md:5 lg:px-10">
         <h1 className="text-4xl font-bold">Book a table</h1>
         <DataTable columns={columns} data={state.bookings} />
