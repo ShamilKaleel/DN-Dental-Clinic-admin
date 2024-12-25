@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,37 +11,64 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type Booking = {
-  referenceId: number; // Unique identifier for the booking
-  name: string; // Patient's full name
-  nic: string; // Patient's National Identity Card number
-  contactNumber: string; // Patient's contact phone number
-  email: string; // Patient's email address
-  address: string; // Patient's residential address
-  scheduleId: number; // Associated schedule ID
-};
+export interface Booking {
+  referenceId: number;
+  name: string;
+  nic: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  scheduleId: number;
+}
 
 export const columns: ColumnDef<Booking>[] = [
   {
     accessorKey: "referenceId",
-    header: "Reference NO",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Label" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("referenceId")}</div>
+    ),
   },
 
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("name")}</div>
+    ),
   },
   {
     accessorKey: "nic",
-    header: "NIC",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="NIC" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("nic")}</div>
+    ),
   },
   {
     accessorKey: "contactNumber",
-    header: "Contact Number",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Contact Number" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">
+        {row.getValue("contactNumber")}
+      </div>
+    ),
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] ">{row.getValue("email")}</div>
+    ),
   },
 
   {

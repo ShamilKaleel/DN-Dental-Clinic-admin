@@ -1,6 +1,7 @@
-import React, { createContext, useReducer, useEffect, ReactNode } from "react";
-import axios from "axios";
-
+import { createContext, useReducer, ReactNode, useEffect } from "react";
+import axiosInstance from "@/api/axiosInstance";
+import { useAuth } from "@/hooks/useAuth";
+// Booking interface
 export interface Booking {
   referenceId: number;
   name: string;
@@ -11,76 +12,91 @@ export interface Booking {
   scheduleId: number;
 }
 
+// Booking API actions
+type BookingAction =
+  | { type: "FETCH_BOOKINGS"; payload: Booking[] }
+  | { type: "CREATE_BOOKING"; payload: Booking }
+  | { type: "DELETE_BOOKING"; payload: number };
+
+// Booking state interface
 interface BookingState {
   bookings: Booking[];
-  isLoading: boolean;
-  error: string | null;
 }
 
-interface BookingContextProps extends BookingState {
-  fetchBookings: () => void;
-}
-
+// Initial state
 const initialState: BookingState = {
   bookings: [],
-  isLoading: false,
-  error: null,
 };
 
-export const BookingContext = createContext<BookingContextProps | undefined>(
-  undefined
-);
-
-type Action =
-  | { type: "FETCH_BOOKINGS_START" }
-  | { type: "FETCH_BOOKINGS_SUCCESS"; payload: Booking[] }
-  | { type: "FETCH_BOOKINGS_FAILURE"; payload: string };
-
-const bookingReducer = (state: BookingState, action: Action): BookingState => {
+// Reducer
+const bookingReducer = (
+  state: BookingState,
+  action: BookingAction
+): BookingState => {
   switch (action.type) {
-    case "FETCH_BOOKINGS_START":
-      return { ...state, isLoading: true, error: null };
-    case "FETCH_BOOKINGS_SUCCESS":
-      return { ...state, isLoading: false, bookings: action.payload };
-    case "FETCH_BOOKINGS_FAILURE":
-      return { ...state, isLoading: false, error: action.payload };
+    case "FETCH_BOOKINGS":
+      return { bookings: action.payload };
+    case "CREATE_BOOKING":
+      return { bookings: [...state.bookings, action.payload] };
+    case "DELETE_BOOKING":
+      return {
+        bookings: state.bookings.filter(
+          (b) => b.referenceId !== action.payload
+        ),
+      };
     default:
       return state;
   }
 };
 
-export const BookingProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [state, dispatch] = useReducer(bookingReducer, initialState);
+// Context
+export const BookingContext = createContext<{
+  state: BookingState;
 
-  const fetchBookings = async () => {
-    dispatch({ type: "FETCH_BOOKINGS_START" });
+  createBooking: (booking: Booking) => Promise<void>;
+  deleteBooking: (id: number) => Promise<void>;
+} | null>(null);
+
+export const BookingProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(bookingReducer, initialState);
+  const { authState } = useAuth();
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axiosInstance.get<Booking[]>("/bookings/all");
+        dispatch({ type: "FETCH_BOOKINGS", payload: response.data });
+      } catch (error) {
+        console.error("Failed to fetch bookings", error);
+      }
+    };
+
+    fetchBookings();
+  }, [authState]);
+
+  const createBooking = async (booking: Booking) => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/bookings/all",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("dn_dental_clinic")}`,
-          },
-          withCredentials: true,
-        }
-      ); // Direct URL
-      dispatch({ type: "FETCH_BOOKINGS_SUCCESS", payload: response.data });
+      const response = await axiosInstance.post<Booking>(
+        "/bookings/create",
+        booking
+      );
+      dispatch({ type: "CREATE_BOOKING", payload: response.data });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      dispatch({ type: "FETCH_BOOKINGS_FAILURE", payload: errorMessage });
+      console.error("Failed to create booking", error);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  const deleteBooking = async (id: number) => {
+    try {
+      await axiosInstance.delete(`/bookings/${id}`);
+      dispatch({ type: "DELETE_BOOKING", payload: id });
+    } catch (error) {
+      console.error("Failed to delete booking", error);
+    }
+  };
 
   return (
-    <BookingContext.Provider value={{ ...state, fetchBookings }}>
+    <BookingContext.Provider value={{ state, createBooking, deleteBooking }}>
       {children}
     </BookingContext.Provider>
   );

@@ -4,19 +4,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "@/pages/LoginPage";
-import SignupPage from "@/pages/SignupPage";
-import NotFoundPage from "@/pages/NotFoundPage";
+import LoginPage from "@/pages/Auth/LoginPage";
+import SignupPage from "@/pages/Auth/SignupPage";
+import NotFoundPage from "@/pages/Auth/NotFoundPage";
 import { useAuth } from "@/hooks/useAuth";
-import DataTableDemo from "@/pages/DataTableDemo";
-import Dashboard from "@/pages/DashboardPage";
-import AdminPage from "@/pages/AdminPage";
-import DentistPage from "@/pages/DentistPage";
-import PatientPage from "@/pages/PatientPage";
-import ReceptionistPage from "@/pages/ReceptionistPage";
-import SchedulePage from "@/pages/SchedulePage";
-import AppointmentListPage from "@/pages/AppointmentListPage";
-import TestPage from "@/pages/Booking/TestPage";
+import DataTableDemo from "@/pages/TestingPages/DataTableDemo";
+import Dashboard from "@/pages/Dashboard/DashboardPage";
+import AdminPage from "@/pages/Admin/AdminPage";
+import DentistPage from "@/pages/Dentist/DentistPage";
+import PatientPage from "@/pages/Patient/PatientPage";
+import ReceptionistPage from "@/pages/Receptionist/ReceptionistPage";
+import SchedulePage from "@/pages/Schedule/SchedulePage";
+import AppointmentListPage from "@/pages/AppointmentList/TestPage";
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
@@ -31,33 +30,19 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const { authState, isLording } = useAuth();
+  const { authState } = useAuth();
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
         <Route
           path="/login"
-          element={
-            !authState && !isLording ? (
-              <LoginPage />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
+          element={!authState ? <LoginPage /> : <Navigate to="/" replace />}
         />
+        {/* Signup Not working*/}
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected Routes */}
-        {/* {!isLording && (
-          <Route
-            path="/"
-            element={
-              authState ? <Dashboard /> : <Navigate to="/login" replace />
-            }
-          />
-        )} */}
-
         <Route
           path="/"
           element={
@@ -75,9 +60,9 @@ export default function App() {
           <Route path="/appointment-list" element={<AppointmentListPage />} />
         </Route>
 
+        {/* Public Routes only for testiong */}
         <Route path="/booking" element={<DataTableDemo />} />
-        <Route path="/test" element={<TestPage />} />
-        {/* <Route path="/" element={<DashboardPage />} /> */}
+        <Route path="/test" element={<AppointmentListPage />} />
 
         {/* Error Page */}
         <Route path="*" element={<NotFoundPage />} />

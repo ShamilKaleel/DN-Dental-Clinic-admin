@@ -32,7 +32,7 @@ export default function DashboardPage() {
     }
   };
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="md:grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -93,7 +93,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <header className="flex h-14  items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
@@ -143,27 +143,10 @@ export default function DashboardPage() {
                   </Badge>
                 </Link> */}
               </nav>
-
-              {/*Card*/}
-              <div className="mt-auto">
-                {/* <Card>
-                  <CardHeader>
-                    <CardTitle>Upgrade to Pro</CardTitle>
-                    <CardDescription>
-                      Unlock all features and get unlimited access to our
-                      support team.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button size="sm" className="w-full">
-                      Upgrade
-                    </Button>
-                  </CardContent>
-                </Card> */}
-              </div>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1 "></div>
+
           <ModeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -185,14 +168,14 @@ export default function DashboardPage() {
           </DropdownMenu>
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className=" flex flex-1  flex-col lg:p-4 overflow-hidden  ">
           <ResponsiveDialog
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             title="Logout"
             description="Are you sure you want to log out?"
           >
-            <div className=" grid grid-flow-col gap-5 px-4">
+            <div className="grid grid-flow-col gap-5 px-4">
               <Button
                 onClick={() => setIsOpen(false)}
                 variant="outline"

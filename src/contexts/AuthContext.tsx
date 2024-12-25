@@ -1,14 +1,39 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 
 interface User {
-  username: string | null;
-  roles: string[] | null;
+  username: string;
+  roles: string[];
 }
+
+type AuthState = User | null;
+
+type AuthAction = { type: "SET_USER"; payload: User } | { type: "CLEAR_USER" };
+
+const initialAuthState: AuthState = null;
+
+// Reducer function
+const authReducer = (_state: AuthState, action: AuthAction): AuthState => {
+  switch (action.type) {
+    case "SET_USER":
+      return action.payload;
+    case "CLEAR_USER":
+      return null;
+    default:
+      return null;
+  }
+};
 
 // Create context
 export const AuthContext = createContext<{
-  authState: User | null;
+  authState: AuthState;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (
@@ -17,62 +42,48 @@ export const AuthContext = createContext<{
     roles: string[]
   ) => Promise<void>;
   isLording: boolean;
-  setIsLording: any;
+  setIsLording: React.Dispatch<React.SetStateAction<boolean>>;
 }>(null!);
 
 // AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authState, setAuthState] = useState<User | null>(null);
+  const [authState, dispatch] = useReducer(authReducer, initialAuthState);
   const [isLording, setIsLording] = useState(true);
 
   useEffect(() => {
-    if (!authState) {
-      setIsLording(true);
-      console.log("user start", authState);
-
-      axios
-        .get("http://localhost:8080/api/auth/user", { withCredentials: true })
-        .then(({ data }) => {
-          const { username, roles } = data;
-          setAuthState({ username, roles });
-          console.log("User fetched successfully:", username);
-        })
-        .catch((error) => {
-          console.error(
-            "Error fetching user data:",
-            error.response?.data || error.message
-          );
-        })
-        .finally(() => {
-          setIsLording(false);
-        });
-    }
-  }, [authState]);
+    setIsLording(true);
+    axiosInstance
+      .get("/auth/user")
+      .then(({ data }) => {
+        const { username, roles } = data;
+        dispatch({ type: "SET_USER", payload: { username, roles } });
+      })
+      .catch((error) => {
+        console.error(
+          "Error fetching user data:",
+          error.response?.data || error.message
+        );
+      })
+      .finally(() => {
+        setIsLording(false);
+      });
+  }, []);
 
   // Login function
-  const login = async (name: string, password: string) => {
+  const login = async (username: string, password: string) => {
+    setIsLording(true);
     try {
-      setIsLording(true);
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/signin",
-        {
-          username: name,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      const { username, roles } = response.data;
-
-      setAuthState({ username, roles });
+      const response = await axiosInstance.post("/auth/signin", {
+        username,
+        password,
+      });
+      const { username: user, roles } = response.data;
+      dispatch({ type: "SET_USER", payload: { username: user, roles } });
     } catch (error: any) {
       console.error("Login failed", error);
       throw error.response?.data?.message || "Invalid credentials";
     } finally {
       setIsLording(false);
-      console.log("finally", authState?.username);
     }
   };
 
@@ -80,14 +91,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     setIsLording(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/signout",
-        {},
-        { withCredentials: true }
-      );
-
-      console.log("logout", response.data);
-      setAuthState(null);
+      await axiosInstance.post("/auth/signout", {});
+      dispatch({ type: "CLEAR_USER" });
     } catch (error: any) {
       console.error("Logout failed", error);
       throw error.response?.data?.error || "Logout error";
@@ -103,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     roles: string[]
   ) => {
     try {
-      await axios.post("http://localhost:8080/api/auth/signup", {
+      await axiosInstance.post("/auth/signup", {
         username,
         password,
         roles,
@@ -117,11 +122,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
+        authState,
         login,
         logout,
         signup,
         isLording,
-        authState,
         setIsLording,
       }}
     >

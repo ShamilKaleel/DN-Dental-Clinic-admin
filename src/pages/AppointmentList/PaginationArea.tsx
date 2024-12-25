@@ -16,7 +16,7 @@ export default function PaginationArea<TData>({ table }: TableProps<TData>) {
   const { theme } = useTheme();
   const [isClient, setIsClient] = useState(false);
 
-  const bgColor = theme === "dark" ? "bg-gray-900" : "bg-white";
+  const bgColor = theme === "dark" ? "bg-muted" : "bg-white";
 
   useEffect(() => {
     setIsClient(true);
@@ -36,7 +36,7 @@ export default function PaginationArea<TData>({ table }: TableProps<TData>) {
     border-t max-sm:flex-col max-sm:gap-2`}
     >
       <PaginationSelection table={table} />
-      <div className="flex gap-6 items-center max-sm:flex-col max-sm:mt-4 max-sm:gap-2">
+      <div className="flex gap-6 items-center max-sm:flex-col max-sm:mt-4 max-sm:gap-2 ">
         {/* Show current page number and total pages */}
         <span className="text-sm text-gray-500">
           Page {currentPage} of {totalPages}
