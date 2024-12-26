@@ -17,6 +17,15 @@ export interface Booking {
   createdAt: string;
 }
 
+export interface CreateBooking {
+  name: string;
+  nic: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  scheduleId: number;
+}
+
 // Booking API actions
 type BookingAction =
   | { type: "FETCH_BOOKINGS"; payload: Booking[] }
@@ -58,7 +67,14 @@ const bookingReducer = (
 export const BookingContext = createContext<{
   state: BookingState;
 
-  createBooking: (booking: Booking) => Promise<void>;
+  createBooking: (
+    name: string,
+    nic: string,
+    contactNumber: string,
+    email: string,
+    address: string,
+    scheduleId: number
+  ) => Promise<void>;
   deleteBooking: (id: number) => Promise<void>;
 } | null>(null);
 
@@ -79,15 +95,26 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     fetchBookings();
   }, [authState]);
 
-  const createBooking = async (booking: any) => {
+  const createBooking = async (
+    name: string,
+    nic: string,
+    contactNumber: string,
+    email: string,
+    address: string,
+    scheduleId: number
+  ) => {
     try {
-      const response = await axiosInstance.post<any>(
-        "/bookings/create",
-        booking
-      );
+      const response = await axiosInstance.post("/bookings/create", {
+        name,
+        nic,
+        contactNumber,
+        email,
+        address,
+        scheduleId,
+      });
       dispatch({ type: "CREATE_BOOKING", payload: response.data });
-    } catch (error) {
-      console.error("Failed to create booking", error);
+    } catch (error: any) {
+      console.error("Failed to create context", error.response.data);
     }
   };
 

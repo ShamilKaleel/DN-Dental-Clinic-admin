@@ -32,19 +32,28 @@ export default function DashboardPage() {
     }
   };
   return (
-    <div className="xl:grid min-h-screen w-full  xl:grid-cols-[220px_1fr]">
-      <div className="hidden border-r bg-muted/40 xl:block">
+    <div className="xl:grid min-h-screen w-full grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-muted dark:bg-muted/40 xl:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link to="/" className="flex items-center gap-2 font-semibold">
-              <img src={Logo} className="h-10 w-10" />
+          <div className="flex  items-center border-b px-4  lg:px-6">
+            <div className="mb-10">
+              <Link
+                to="/"
+                className=" flex flex-col items-start gap-2 text-lg "
+              >
+                <div className="w-full pl-14">
+                  <img src={Logo} className="h-20 w-20 " />
+                </div>
 
-              <span className="text-xl ">DN Dental </span>
-            </Link>
-            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+                <span className="text-[25px] text-center font-bold ">
+                  DN Dental Clinic
+                </span>
+              </Link>
+            </div>
+            {/* <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
               <Bell className="h-4 w-4" />
               <span className="sr-only">Toggle notifications</span>
-            </Button>
+            </Button> */}
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -94,7 +103,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex flex-col ">
-        <header className="flex h-14  items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14  items-center gap-4 border-b bg-muted dark:bg-muted/40 px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -106,16 +115,25 @@ export default function DashboardPage() {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col">
+            <SheetContent
+              side="left"
+              className="flex flex-col  dark:bg-muted text-white"
+            >
               <nav className="grid gap-2 text-lg font-medium relative">
-                <Link
-                  to="/"
-                  className=" flex flex-col items-center gap-2 text-lg font-semibold"
-                >
-                  <img src={Logo} className="h-20 w-20" />
+                <div className="mb-10">
+                  <Link
+                    to="/"
+                    className=" flex flex-col items-start gap-2 text-lg font-semibold"
+                  >
+                    <div className="w-full pl-14">
+                      <img src={Logo} className="h-20 w-20 " />
+                    </div>
 
-                  <span className="text-4xl ">DN Dental Clinic</span>
-                </Link>
+                    <span className="text-[25px] text-center ">
+                      DN Dental Clinic
+                    </span>
+                  </Link>
+                </div>
 
                 {navLinks.map((link) => (
                   <NavLink
@@ -123,8 +141,8 @@ export default function DashboardPage() {
                     to={link.path}
                     className={({ isActive }) =>
                       isActive
-                        ? "mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                        : "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground "
+                        ? "mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-black  dark:text-foreground hover:text-foreground"
+                        : "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  dark:text-muted-foreground dark:hover:text-foreground "
                     }
                   >
                     {link.icon} {/* Render the Lucide icon */}
@@ -168,7 +186,7 @@ export default function DashboardPage() {
           </DropdownMenu>
         </header>
 
-        <main className=" flex flex-1  flex-col lg:p-4 overflow-hidden  ">
+        <main className=" flex flex-1  flex-col lg:p-4 pt-4 overflow-hidden  ">
           <ResponsiveDialog
             isOpen={isOpen}
             setIsOpen={setIsOpen}

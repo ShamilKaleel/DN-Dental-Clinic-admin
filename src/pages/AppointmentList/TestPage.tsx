@@ -4,8 +4,12 @@ import { columns } from "@/pages/AppointmentList/columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import BookingForm from "@/components/appointment-form";
+import { useState } from "react";
 export default function BookingPage() {
   const { state } = useBooking();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!state)
     return (
@@ -17,7 +21,15 @@ export default function BookingPage() {
     );
   return (
     <div className="flex flex-col">
-      <div className="pb-5 px-2 md:5 lg:px-10">
+      <ResponsiveDialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="Add Appointment"
+        className="sm:max-w-screen-md p-20"
+      >
+        <BookingForm setIsOpen={setIsOpen} />
+      </ResponsiveDialog>
+      <div className="pb-5 px-2 lg:px-0">
         <Tabs defaultValue="apoinments">
           <TabsList className=" ">
             <TabsTrigger value="schedules">Schedules </TabsTrigger>
@@ -34,7 +46,10 @@ export default function BookingPage() {
                   <span className="hidden md:block"> Export CSV</span>
                   <Download className="md:hidden" />
                 </Button>
-                <Button className="btn btn-primary p-o">
+                <Button
+                  className="btn btn-primary p-o"
+                  onClick={() => setIsOpen(true)}
+                >
                   <span className="hidden md:block"> Add Appointment</span>
                   <Plus className="md:hidden" />
                 </Button>

@@ -25,21 +25,23 @@ export function ResponsiveDialog({
   setIsOpen,
   title,
   description,
+  className,
 }: {
   children: React.ReactNode;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   description?: string;
+  className?: string;
 }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className={`${className ?? "sm:max-w-[425px] "}`}>
           <DialogHeader>
-            <DialogTitle className=" text-center">{title}</DialogTitle>
+            <DialogTitle className="">{title}</DialogTitle>
             {description && (
               <DialogDescription className=" text-center">
                 {description}
