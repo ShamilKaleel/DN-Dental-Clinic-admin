@@ -1,6 +1,7 @@
 import { createContext, useReducer, ReactNode, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { useAuth } from "@/hooks/useAuth";
+
 // Booking interface
 export interface Booking {
   referenceId: number;
@@ -10,6 +11,10 @@ export interface Booking {
   email: string;
   address: string;
   scheduleId: number;
+  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
+  date: string;
+  dayofweek: string;
+  createdAt: string;
 }
 
 // Booking API actions
@@ -74,9 +79,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     fetchBookings();
   }, [authState]);
 
-  const createBooking = async (booking: Booking) => {
+  const createBooking = async (booking: any) => {
     try {
-      const response = await axiosInstance.post<Booking>(
+      const response = await axiosInstance.post<any>(
         "/bookings/create",
         booking
       );

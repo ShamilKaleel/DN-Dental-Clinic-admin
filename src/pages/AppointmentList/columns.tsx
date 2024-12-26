@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import StatusBar from "./data-table-status-bar";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export interface Booking {
   referenceId: number;
@@ -19,14 +21,20 @@ export interface Booking {
   email: string;
   address: string;
   scheduleId: number;
+  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
+  date: string;
+  dayofweek: string;
+  createdAt: string;
 }
-
 export const columns: ColumnDef<Booking>[] = [
   {
     accessorKey: "referenceId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Label" />
+      <DataTableColumnHeader column={column} title="Reference Id" />
     ),
+    enableSorting: false,
+    enableHiding: false,
+
     cell: ({ row }) => (
       <div className="w-[150px] capitalize">{row.getValue("referenceId")}</div>
     ),
@@ -62,45 +70,24 @@ export const columns: ColumnDef<Booking>[] = [
     ),
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="status" />
+    ),
+    cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
+  },
+  {
     accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Email" className="" />
     ),
     cell: ({ row }) => (
-      <div className="w-[170px] bg-red-500">{row.getValue("email")}</div>
+      <div className="w-[170px] ">{row.getValue("email")}</div>
     ),
   },
 
   {
     id: "actions",
-    cell: ({ row }) => {
-      const booking = row.original;
-
-      return (
-        <div className=" text-center ">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(booking.referenceId.toString())
-                }
-              >
-                Copy reference ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

@@ -6,11 +6,12 @@ import { DataTableViewOptions } from "./data-table-view-options";
 import { TrashIcon } from "lucide-react";
 import { useState } from "react";
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
@@ -24,8 +25,8 @@ export function DataTableToolbar<TData>({
   const [selectedColumn, setSelectedColumn] = useState<string>("email");
 
   return (
-    <div className="flex flex-wrap items-center justify-between">
-      <div className="flex flex-1 flex-wrap items-center gap-2">
+    <div className="flex  items-center justify-between">
+      <div className="flex flex-1  items-center gap-2">
         {/* Input for filtering */}
         <Input
           placeholder={`Filter ${selectedColumn
@@ -40,28 +41,31 @@ export function DataTableToolbar<TData>({
           className="h-8 w-[150px] lg:w-[250px] capitalize"
         />
 
-        {/* Dropdown for selecting column */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 px-2 border rounded-md lg:w-[150px] capitalize">
-              {selectedColumn.replace(/([A-Z])/g, " $1").trim()}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
+        {/* Select dropdown for selecting column */}
+        <Select
+          value={selectedColumn}
+          onValueChange={(value) => setSelectedColumn(value)}
+        >
+          <SelectTrigger className="h-8 px-2 border rounded-md w-[150px]  capitalize">
+            <SelectValue
+              placeholder={selectedColumn.replace(/([A-Z])/g, " $1").trim()}
+            />
+          </SelectTrigger>
+          <SelectContent>
             {table.getAllColumns().map(
               (column) =>
                 column.getCanFilter() && (
-                  <DropdownMenuItem
+                  <SelectItem
                     key={column.id}
-                    onClick={() => setSelectedColumn(column.id)}
+                    value={column.id}
                     className="capitalize"
                   >
                     {column.id.replace(/([A-Z])/g, " $1").trim()}
-                  </DropdownMenuItem>
+                  </SelectItem>
                 )
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SelectContent>
+        </Select>
 
         {/* Reset button for clearing filters */}
         {isFiltered && (
@@ -71,7 +75,7 @@ export function DataTableToolbar<TData>({
             className="h-8 px-2 lg:px-3"
           >
             Reset
-            <Cross2Icon className="ml-2 h-4 w-4" />
+            <Cross2Icon className="ml-2 h-4 w-4 " />
           </Button>
         )}
       </div>

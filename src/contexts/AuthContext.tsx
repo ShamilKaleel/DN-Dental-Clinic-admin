@@ -70,11 +70,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Login function
-  const login = async (username: string, password: string) => {
+  const login = async (userNameOrEmail: string, password: string) => {
     setIsLording(true);
     try {
       const response = await axiosInstance.post("/auth/signin", {
-        username,
+        userNameOrEmail,
         password,
       });
       const { username: user, roles } = response.data;

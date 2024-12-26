@@ -15,7 +15,7 @@ export interface Dentist {
   roles: string[];
 }
 
-// CreateDentist type (matches CreateDentistDTO)
+// CreateDentist type
 export interface CreateDentist {
   userName: string;
   email: string;
@@ -28,75 +28,74 @@ export interface CreateDentist {
   password: string;
 }
 
-// Dentist API actions
+// Actions for Dentist
 type DentistAction =
   | { type: "FETCH_DENTISTS"; payload: Dentist[] }
   | { type: "CREATE_DENTIST"; payload: Dentist }
   | { type: "UPDATE_DENTIST"; payload: Dentist }
   | { type: "DELETE_DENTIST"; payload: number };
 
-// Dentist state interface
+// Dentist state
 interface DentistState {
   dentists: Dentist[];
 }
 
-// Initial state
 const initialState: DentistState = {
   dentists: [],
 };
 
 // Reducer
 const dentistReducer = (
-  state: DentistState,
+  _state: DentistState,
   action: DentistAction
 ): DentistState => {
   switch (action.type) {
     case "FETCH_DENTISTS":
       return { dentists: action.payload };
     case "CREATE_DENTIST":
-      return { dentists: [...state.dentists, action.payload] };
+      return { dentists: [..._state.dentists, action.payload] };
     case "UPDATE_DENTIST":
       return {
-        dentists: state.dentists.map((dentist) =>
+        dentists: _state.dentists.map((dentist) =>
           dentist.id === action.payload.id ? action.payload : dentist
         ),
       };
     case "DELETE_DENTIST":
       return {
-        dentists: state.dentists.filter(
+        dentists: _state.dentists.filter(
           (dentist) => dentist.id !== action.payload
         ),
       };
     default:
-      return state;
+      return _state;
   }
 };
 
 // Context
 export const DentistContext = createContext<{
-  state: DentistState;
-  createDentist: (dentist: CreateDentist) => Promise<void>;
+  dentistState: DentistState;
+  createDentist: (dentist: Dentist) => Promise<void>;
   updateDentist: (id: number, dentist: Dentist) => Promise<void>;
   deleteDentist: (id: number) => Promise<void>;
 } | null>(null);
 
+// Provider
 export const DentistProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(dentistReducer, initialState);
+  const [dentistState, dispatch] = useReducer(dentistReducer, initialState);
 
   useEffect(() => {
     const fetchDentists = async () => {
       try {
-        const response = await axiosInstance.get<Dentist[]>("/dentist/all");
+        const response = await axiosInstance.get("/dentist/all");
         dispatch({ type: "FETCH_DENTISTS", payload: response.data });
       } catch (error) {
         console.error("Failed to fetch dentists", error);
       }
     };
-
     fetchDentists();
   }, []);
 
-  const createDentist = async (dentist: CreateDentist) => {
+  const createDentist = async (dentist: Dentist) => {
     try {
       const response = await axiosInstance.post<Dentist>(
         "/dentist/create",
@@ -131,7 +130,7 @@ export const DentistProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <DentistContext.Provider
-      value={{ state, createDentist, updateDentist, deleteDentist }}
+      value={{ dentistState, createDentist, updateDentist, deleteDentist }}
     >
       {children}
     </DentistContext.Provider>
