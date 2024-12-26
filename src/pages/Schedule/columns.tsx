@@ -16,66 +16,114 @@ export interface Booking {
   dayofweek: string;
   createdAt: string;
 }
-export const columns: ColumnDef<Booking>[] = [
-  {
-    accessorKey: "referenceId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Reference Id" />
-    ),
-    enableSorting: false,
-    enableHiding: false,
 
-    cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("referenceId")}</div>
-    ),
-  },
+export interface Schedule {
+  id: number;
+  date: string;
+  dayOfWeek: string;
+  status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
+  numberOfBookings: number;
+  bookings: Booking[];
+  startTime: string;
+  endTime: string;
+  duration: number;
+  dentistId: number;
+  createdAt: string;
+}
 
+;
+
+export const scheduleColumns: ColumnDef<Schedule>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("name")}</div>
+      <div className="w-[150px] capitalize">{row.getValue("id")}</div>
     ),
   },
   {
-    accessorKey: "nic",
+    accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="NIC" />
+      <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("nic")}</div>
+      <div className="w-[150px] capitalize">{row.getValue("date")}</div>
     ),
   },
   {
-    accessorKey: "contactNumber",
+    accessorKey: "dayOfWeek",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Contact Number" />
+      <DataTableColumnHeader column={column} title="Day of Week" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">
-        {row.getValue("contactNumber")}
-      </div>
+      <div className="w-[150px] capitalize">{row.getValue("dayOfWeek")}</div>
     ),
   },
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="status" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
   },
   {
-    accessorKey: "email",
+    accessorKey: "numberOfBookings",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" className="" />
+      <DataTableColumnHeader column={column} title="Number of Bookings" />
     ),
     cell: ({ row }) => (
-      <div className="w-[170px] ">{row.getValue("email")}</div>
+      <div className="w-[150px] capitalize">
+        {row.getValue("numberOfBookings")}
+      </div>
     ),
   },
-
+  {
+    accessorKey: "startTime",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Start Time" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("startTime")}</div>
+    ),
+  },
+  {
+    accessorKey: "endTime",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="End Time" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("endTime")}</div>
+    ),
+  },
+  {
+    accessorKey: "duration",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Duration" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("duration")}</div>
+    ),
+  },
+  {
+    accessorKey: "dentistId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Dentist ID" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("dentistId")}</div>
+    ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created At" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px] capitalize">{row.getValue("createdAt")}</div>
+    ),
+  },
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

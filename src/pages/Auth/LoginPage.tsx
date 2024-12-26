@@ -106,6 +106,11 @@ export default function LoginPage() {
               <p className="text-red-500 absolute top-16 text-xs text-center pl-1">
                 {errors.password?.message}
               </p>
+              <p className="text-right w-full block mt-5">
+                <Link to="/signup" className=" underline text-gray-500">
+                  Forgot Password ?
+                </Link>
+              </p>
             </div>
 
             {/* Submit button with loader */}
@@ -119,12 +124,6 @@ export default function LoginPage() {
                 {/* Show loader or text */}
               </Button>
               {/* Display form-level error message */}
-              <p className="text-center block mt-5">
-                I don't have an accout{" "}
-                <Link to="/signup" className=" underline text-gray-500">
-                  Signup
-                </Link>
-              </p>
 
               <p className=" text-center text-red-500  pl-1 absolute top-32 left-0 right-0">
                 {errors.root?.message}
@@ -133,7 +132,7 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
-      <div className="hidden lg:block bg-primary dark:bg-muted relative object-cover ">
+      <div className="hidden lg:block bg-primary relative object-cover ">
         <img src={Pattern} alt="login" className="h-screen w-full absolute" />
         <div className="pl-10 flex justify-center w-full h-screen items-center   ">
           <img src={LoginImage} alt="login" className="" />

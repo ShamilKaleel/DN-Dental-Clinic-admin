@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import { AuthProvider } from "./contexts/authContext.tsx";
 import { BookingProvider } from "./contexts/bookingContext.tsx";
 import { DentistProvider } from "./contexts/dentistContext.tsx";
+import { ScheduleProvider } from "./contexts/scheduleContext.tsx";
 import { ThemeProvider } from "./components/theme-provider.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")!).render(
       <DentistProvider>
         <ThemeProvider>
           <BookingProvider>
-            <App />
+            <ScheduleProvider>
+              <App />
+            </ScheduleProvider>
           </BookingProvider>
         </ThemeProvider>
       </DentistProvider>

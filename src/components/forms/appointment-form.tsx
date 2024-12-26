@@ -3,8 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useBooking } from "@/hooks/useBooking";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 // Define Zod schema
 const bookingSchema = z.object({
   name: z

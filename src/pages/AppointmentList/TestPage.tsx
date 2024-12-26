@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import BookingForm from "@/components/appointment-form";
+import BookingForm from "@/components/forms/appointment-form";
 import { useState } from "react";
 export default function BookingPage() {
   const { state } = useBooking();
