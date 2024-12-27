@@ -45,7 +45,7 @@ export default function DashboardPage() {
                   <img src={Logo} className="h-20 w-20 " />
                 </div>
 
-                <span className="text-[25px] text-center font-bold ">
+                <span className="text-[25px] text-center  font-bold ">
                   DN Dental Clinic
                 </span>
               </Link>
@@ -109,27 +109,24 @@ export default function DashboardPage() {
               <Button
                 variant="outline"
                 size="icon"
-                className="shrink-0 md:hidden"
+                className="shrink-0 xl:hidden"
               >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="flex flex-col  dark:bg-muted text-white"
-            >
+            <SheetContent side="left" className="flex flex-col  dark:bg-muted ">
               <nav className="grid gap-2 text-lg font-medium relative">
                 <div className="mb-10">
                   <Link
                     to="/"
-                    className=" flex flex-col items-start gap-2 text-lg font-semibold"
+                    className=" flex flex-col items-start gap-2 text-lg font-bold "
                   >
                     <div className="w-full pl-14">
                       <img src={Logo} className="h-20 w-20 " />
                     </div>
 
-                    <span className="text-[25px] text-center ">
+                    <span className="text-[25px] text-center text-primary">
                       DN Dental Clinic
                     </span>
                   </Link>
@@ -149,21 +146,21 @@ export default function DashboardPage() {
                     <span>{link.title}</span>
                   </NavLink>
                 ))}
-
-                {/* <Link
-                  to="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                  <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                    6
-                  </Badge>
-                </Link> */}
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1 "></div>
+          <div className="w-full  flex-1">
+            <Link
+              to="/"
+              className=" flex justify-start items-center gap-2 text-lg xl:hidden"
+            >
+              <div className=" ">
+                <img src={Logo} className="h-8 w-8 " />
+              </div>
+
+              <span className=" font-bold text-primary">DN Dental </span>
+            </Link>
+          </div>
 
           <ModeToggle />
           <DropdownMenu>
@@ -187,29 +184,31 @@ export default function DashboardPage() {
         </header>
 
         <main className=" flex flex-1  flex-col lg:p-4 pt-4 overflow-hidden  ">
-          <ResponsiveDialog
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            title="Logout"
-            description="Are you sure you want to log out?"
-          >
-            <div className="grid grid-flow-col gap-5 px-4">
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="outline"
-                className="w-full"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleLogout}
-                variant="default"
-                className="w-full"
-              >
-                Logout
-              </Button>
-            </div>
-          </ResponsiveDialog>
+          {isOpen && (
+            <ResponsiveDialog
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              title="Logout"
+              description="Are you sure you want to log out?"
+            >
+              <div className="grid grid-flow-col gap-5 px-4">
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleLogout}
+                  variant="default"
+                  className="w-full"
+                >
+                  Logout
+                </Button>
+              </div>
+            </ResponsiveDialog>
+          )}
 
           <Outlet />
         </main>

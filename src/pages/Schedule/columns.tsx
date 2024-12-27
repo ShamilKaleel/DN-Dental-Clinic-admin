@@ -29,18 +29,17 @@ export interface Schedule {
   duration: number;
   dentistId: number;
   createdAt: string;
+  capacity: number;
 }
 
-;
-
-export const scheduleColumns: ColumnDef<Schedule>[] = [
+export const columns: ColumnDef<Schedule>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("id")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("id")}</div>
     ),
   },
   {
@@ -49,7 +48,7 @@ export const scheduleColumns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("date")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("date")}</div>
     ),
   },
   {
@@ -58,7 +57,7 @@ export const scheduleColumns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Day of Week" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("dayOfWeek")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("dayOfWeek")}</div>
     ),
   },
   {
@@ -71,12 +70,21 @@ export const scheduleColumns: ColumnDef<Schedule>[] = [
   {
     accessorKey: "numberOfBookings",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Number of Bookings" />
+      <DataTableColumnHeader column={column} title="Booking count" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">
+      <div className="w-[100px] capitalize">
         {row.getValue("numberOfBookings")}
       </div>
+    ),
+  },
+  {
+    accessorKey: "capacity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Capacity" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[100px] capitalize">{row.getValue("capacity")}</div>
     ),
   },
   {
@@ -85,7 +93,7 @@ export const scheduleColumns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Start Time" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("startTime")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("startTime")}</div>
     ),
   },
   {
@@ -94,36 +102,20 @@ export const scheduleColumns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="End Time" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("endTime")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("endTime")}</div>
     ),
   },
-  {
-    accessorKey: "duration",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Duration" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("duration")}</div>
-    ),
-  },
+
   {
     accessorKey: "dentistId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Dentist ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("dentistId")}</div>
+      <div className="w-[100px] capitalize">{row.getValue("dentistId")}</div>
     ),
   },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("createdAt")}</div>
-    ),
-  },
+
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

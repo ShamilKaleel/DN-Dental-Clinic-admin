@@ -14,6 +14,7 @@ export interface Schedule {
   duration: number;
   dentistId: number;
   createdAt: string;
+  capacity: number;
 }
 
 // Booking interface
@@ -38,6 +39,8 @@ export interface CreateSchedule {
   startTime: string;
   endTime: string;
   dentistId: number;
+  createdAt: string;
+  capacity: number;
 }
 
 // Schedule API actions

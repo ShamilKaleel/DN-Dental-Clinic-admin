@@ -16,6 +16,7 @@ import PatientPage from "@/pages/Patient/PatientPage";
 import ReceptionistPage from "@/pages/Receptionist/ReceptionistPage";
 import SchedulePage from "@/pages/Schedule/SchedulePage";
 import AppointmentListPage from "@/pages/AppointmentList/TestPage";
+import { Divide } from "lucide-react";
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
@@ -51,7 +52,7 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<DataTableDemo />} />
+          <Route index element={<div>hi</div>} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/dentist" element={<DentistPage />} />
           <Route path="/patient" element={<PatientPage />} />
