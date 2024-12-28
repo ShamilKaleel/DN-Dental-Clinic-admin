@@ -17,6 +17,16 @@ export interface Schedule {
   capacity: number;
 }
 
+// Create Schedule interface
+export interface CreateSchedule {
+  date: string;
+  status: string;
+  startTime: string;
+  endTime: string;
+  dentistId: number;
+  capacity: number;
+}
+
 // Booking interface
 export interface Booking {
   referenceId: string;
@@ -32,16 +42,7 @@ export interface Booking {
   createdAt: string;
 }
 
-// Create Schedule interface
-export interface CreateSchedule {
-  date: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  dentistId: number;
-  createdAt: string;
-  capacity: number;
-}
+
 
 // Schedule API actions
 type ScheduleAction =
@@ -81,7 +82,15 @@ const scheduleReducer = (
 // Context
 export const ScheduleContext = createContext<{
   state: ScheduleState;
-  createSchedule: (schedule: CreateSchedule) => Promise<void>;
+  fetchSchedules: () => Promise<void>;
+  createSchedule: (
+    date: string,
+    status: string,
+    startTime: string,
+    endTime: string,
+    dentistId: number,
+    capacity: number
+  ) => Promise<void>;
   deleteSchedule: (id: number) => Promise<void>;
 } | null>(null);
 
@@ -89,25 +98,35 @@ export const ScheduleContext = createContext<{
 export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(scheduleReducer, initialState);
 
-  useEffect(() => {
-    const fetchSchedules = async () => {
-      try {
-        const response = await axiosInstance.get<Schedule[]>("/schedules/all");
-        dispatch({ type: "FETCH_SCHEDULES", payload: response.data });
-      } catch (error) {
-        console.error("Failed to fetch schedules", error);
-      }
-    };
-
-    fetchSchedules();
-  }, []);
-
-  const createSchedule = async (schedule: CreateSchedule) => {
+  const fetchSchedules = async () => {
     try {
-      const response = await axiosInstance.post("/schedules/create", schedule);
+      const response = await axiosInstance.get<Schedule[]>("/schedules/all");
+      dispatch({ type: "FETCH_SCHEDULES", payload: response.data });
+    } catch (error) {
+      console.error("Failed to fetch schedules", error);
+    }
+  };
+
+  const createSchedule = async (
+    date: string,
+    status: string,
+    startTime: string,
+    endTime: string,
+    dentistId: number,
+    capacity: number
+  ) => {
+    try {
+      const response = await axiosInstance.post("/schedules/create", {
+        date,
+        status,
+        startTime,
+        endTime,
+        dentistId,
+        capacity,
+      });
       dispatch({ type: "CREATE_SCHEDULE", payload: response.data });
     } catch (error: any) {
-      console.error("Failed to create schedule", error.response?.data);
+      console.error("bye", error);
     }
   };
 
@@ -121,7 +140,9 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ScheduleContext.Provider value={{ state, createSchedule, deleteSchedule }}>
+    <ScheduleContext.Provider
+      value={{ state, createSchedule, deleteSchedule, fetchSchedules }}
+    >
       {children}
     </ScheduleContext.Provider>
   );

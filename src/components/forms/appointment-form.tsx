@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useBooking } from "@/hooks/useBooking";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+
 // Define Zod schema
 const bookingSchema = z.object({
   name: z
@@ -33,9 +34,11 @@ interface BookingFormProps {
 
 const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
   const { createBooking } = useBooking();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<BookingForm>({
     resolver: zodResolver(bookingSchema),
@@ -52,7 +55,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
         data.scheduleId
       );
     } catch (error: any) {
-      console.error("Failed to create booking", error.response.data);
+      setError("root", {
+        type: "manual",
+        message: error.response?.data?.error || "Failed to create booking",
+      });
     }
   };
 
@@ -154,7 +160,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
         )}
       </div>
 
-      <div className="flex justify-center gap-5 pt-5">
+      <div className="flex justify-center gap-5 pt-5 relative">
         <Button
           className="bg-muted  px-8"
           onClick={() => setIsOpen(false)}
@@ -165,6 +171,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
         <Button type="submit" disabled={isSubmitting} className="px-8">
           {isSubmitting ? "Submitting..." : "Submit"}
         </Button>
+
+        <p className=" text-center text-red-500  pl-1 absolute top-32 left-0 right-0">
+          {errors.root?.message}
+        </p>
       </div>
     </form>
   );

@@ -5,13 +5,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import BookingForm from "@/components/forms/appointment-form";
-import { useState } from "react";
+import ScheduleForm from "@/components/forms/schedule-form";
+import { useEffect, useState } from "react";
 export default function SchedulePage() {
-  const { state } = useSchedules();
+  const { state, fetchSchedules } = useSchedules();
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  if (!state) {
+  useEffect(() => {
+    setIsLoading(true);
+    try {
+      const fetchData = async () => {
+        await fetchSchedules();
+      };
+      fetchData();
+    } catch (error) {
+      console.error("Failed to fetch schedules", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -20,39 +35,39 @@ export default function SchedulePage() {
       <ResponsiveDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        title="Add Appointment"
+        title="Add Schedule"
         className="sm:max-w-screen-md p-20"
       >
-        <BookingForm setIsOpen={setIsOpen} />
+        <ScheduleForm setIsOpen={setIsOpen} />
       </ResponsiveDialog>
       <div className="pb-5 px-2 lg:px-0">
-        <Tabs defaultValue="apoinments">
+        <Tabs defaultValue="schedules">
           <TabsList className=" ">
             <TabsTrigger value="schedules">Schedules </TabsTrigger>
-            <TabsTrigger value="apoinments">All Apoinments</TabsTrigger>
+            <TabsTrigger value="apoinments">Not ready</TabsTrigger>
           </TabsList>
           <TabsContent value="schedules">
-            <div>hi</div>
-          </TabsContent>
-          <TabsContent value="apoinments">
             <div className="flex justify-between py-5">
-              <h1 className="text-2xl font-bold pl-1">Appointment List </h1>
+              <h1 className="text-2xl font-bold pl-1">Schedules List </h1>
               <div className="flex gap-2 md:gap-5">
                 <Button className="btn btn-primary bg-muted" variant="ghost">
-                  <span className="hidden md:block"> Export CSV</span>
+                  <span className="hidden md:block"> Export CSV </span>
                   <Download className="md:hidden" />
                 </Button>
                 <Button
                   className="btn btn-primary p-o"
                   onClick={() => setIsOpen(true)}
                 >
-                  <span className="hidden md:block"> Add Appointment</span>
+                  <span className="hidden md:block"> Add Schedule</span>
                   <Plus className="md:hidden" />
                 </Button>
               </div>
             </div>
 
             <DataTable columns={columns} data={state.schedules} />
+          </TabsContent>
+          <TabsContent value="apoinments">
+            <div>hi</div>
           </TabsContent>
         </Tabs>
       </div>

@@ -31,7 +31,6 @@ export interface Schedule {
   createdAt: string;
   capacity: number;
 }
-
 export const columns: ColumnDef<Schedule>[] = [
   {
     accessorKey: "id",
@@ -49,15 +48,6 @@ export const columns: ColumnDef<Schedule>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[100px] capitalize">{row.getValue("date")}</div>
-    ),
-  },
-  {
-    accessorKey: "dayOfWeek",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Day of Week" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("dayOfWeek")}</div>
     ),
   },
   {

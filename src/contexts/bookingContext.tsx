@@ -103,19 +103,15 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     address: string,
     scheduleId: number
   ) => {
-    try {
-      const response = await axiosInstance.post("/bookings/create", {
-        name,
-        nic,
-        contactNumber,
-        email,
-        address,
-        scheduleId,
-      });
-      dispatch({ type: "CREATE_BOOKING", payload: response.data });
-    } catch (error: any) {
-      console.error("Failed to create context", error.response.data);
-    }
+    const response = await axiosInstance.post("/bookings/create", {
+      name,
+      nic,
+      contactNumber,
+      email,
+      address,
+      scheduleId,
+    });
+    dispatch({ type: "CREATE_BOOKING", payload: response.data });
   };
 
   const deleteBooking = async (id: number) => {
