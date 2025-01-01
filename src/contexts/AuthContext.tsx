@@ -59,10 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         dispatch({ type: "SET_USER", payload: { username, roles } });
       })
       .catch((error) => {
-        console.error(
-          "Error fetching user data:",
-          error.response?.data || error.message
-        );
+        console.error("Error fetching user data:", error.message);
       })
       .finally(() => {
         setIsLording(false);

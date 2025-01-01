@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Lorder from "@/Component/Lorder";
+import Lorder from "@/components/Lorder";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ import LoginImage from "@/assets/images/LoginImage.png";
 import Pattern from "@/assets/images/Pattern.png";
 import { useAuth } from "@/hooks/useAuth";
 import Logo from "@/assets/images/Logo.png";
-
+import { useToast } from "@/hooks/use-toast";
 // Schema validation using Zod
 const schema = z.object({
   username: z.string(),
@@ -24,6 +24,7 @@ type FormValues = z.infer<typeof schema>;
 export default function LoginPage() {
   // Get the login function from the AuthContext
   const { login } = useAuth();
+  const { toast } = useToast();
 
   // Initialize React Hook Form with Zod resolver and default values
   const {
@@ -43,6 +44,10 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       await login(data.username, data.password);
+      toast({
+        title: "Login Successful",
+        description: "Redirecting to dashboard...",
+      });
     } catch (error: any) {
       // Handle API error response
       setError("root", {

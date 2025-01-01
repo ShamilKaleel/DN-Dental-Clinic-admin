@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,17 +22,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSchedules } from "@/hooks/useSchedule";
 import { useToast } from "@/hooks/use-toast";
-// Zod schema for validation
-const createScheduleSchema = z.object({
+
+const editScheduleSchema = z.object({
   date: z
     .string()
     .nonempty("Date is required")
     .refine((val) => !isNaN(Date.parse(val)), "Invalid date format"),
-  status: z.enum(["AVAILABLE", "UNAVAILABLE", "FULL"], {
-    errorMap: () => ({
-      message: "Status must be AVAILABLE, UNAVAILABLE, or FULL",
-    }),
-  }),
+  status: z.enum(
+    ["AVAILABLE", "UNAVAILABLE", "FULL", "CANCELLED", "FINISHED"],
+    {
+      errorMap: () => ({
+        message: "Status must be AVAILABLE, UNAVAILABLE, or FULL",
+      }),
+    }
+  ),
   startTime: z
     .string()
     .nonempty("Start time is required")
@@ -57,30 +60,58 @@ const createScheduleSchema = z.object({
     .nonnegative("Capacity must be valid"),
 });
 
-// TypeScript type inferred from Zod schema
-type CreateSchedule = z.infer<typeof createScheduleSchema>;
+type EditSchedule = z.infer<typeof editScheduleSchema>;
 
-interface ScheduleFormProps {
+interface EditScheduleFormProps {
+  cardId: string;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
+const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
+  cardId,
+  setIsOpen,
+}) => {
   const [date, setDate] = useState<Date | undefined>();
   const { toast } = useToast();
-  const { createSchedule } = useSchedules();
+  const { getSchedule, updateSchedule } = useSchedules();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<CreateSchedule>({
-    resolver: zodResolver(createScheduleSchema),
+  } = useForm<EditSchedule>({
+    resolver: zodResolver(editScheduleSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateSchedule> = async (data) => {
-    console.log(data);
+  const scheduleId = parseInt(cardId, 10);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const schedule = await getSchedule(scheduleId);
+        setValue("date", schedule.date);
+        setValue("status", schedule.status);
+        setValue("startTime", schedule.startTime);
+        setValue("endTime", schedule.endTime);
+        setValue("dentistId", schedule.dentistId);
+        setValue("capacity", schedule.capacity);
+        setDate(new Date(schedule.date));
+      } catch (error: any) {
+        toast({
+          title: "Error fetching schedule",
+          description: error.response?.data?.error || "An error occurred",
+          variant: "destructive",
+        });
+      }
+    };
+
+    fetchSchedule();
+  }, [parseInt(cardId, 10), setValue, toast, getSchedule]);
+
+  const onSubmit: SubmitHandler<EditSchedule> = async (data) => {
     try {
-      await createSchedule(
+      await updateSchedule(
+        scheduleId,
         data.date,
         data.status,
         data.startTime,
@@ -90,12 +121,12 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
       );
       setIsOpen(false);
       toast({
-        title: "Schedule Created",
-        description: "New schedule has been added Doctor id: " + data.dentistId,
+        title: "Schedule Updated",
+        description: `Schedule ${scheduleId} has been updated successfully.`,
       });
     } catch (error: any) {
       toast({
-        title: "Error creating schedule",
+        title: "Error updating schedule",
         description: error.response?.data?.error || "An error occurred",
         variant: "destructive",
       });
@@ -104,7 +135,6 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-5 md:px-0">
-      {/* Date Field */}
       <div>
         <label htmlFor="date" className="block text-sm font-medium">
           Date:
@@ -140,23 +170,24 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
         )}
       </div>
 
-      {/* Status Field */}
       <div>
         <label htmlFor="status" className="block text-sm font-medium">
           Status:
         </label>
         <Select
           onValueChange={(value) => {
-            setValue("status", value as any); // Cast to the expected type
+            setValue("status", value as any);
           }}
         >
-          <SelectTrigger className={`w-[240px] `}>
+          <SelectTrigger className={`w-[240px]`}>
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
             <SelectItem value="UNAVAILABLE">UNAVAILABLE</SelectItem>
             <SelectItem value="FULL">FULL</SelectItem>
+            <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+            <SelectItem value="FINISHED">FINISHED</SelectItem>
           </SelectContent>
         </Select>
         {errors.status && (
@@ -165,7 +196,6 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Start Time Field */}
         <div>
           <label htmlFor="startTime" className="block text-sm font-medium">
             Start Time:
@@ -174,15 +204,13 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
             type="text"
             id="startTime"
             {...register("startTime")}
-            step="1"
-            className={`mt-1 block w-full rounded-md shadow-sm =`}
+            className={`mt-1 block w-full rounded-md shadow-sm`}
           />
           {errors.startTime && (
             <p className="text-red-500 text-sm">{errors.startTime.message}</p>
           )}
         </div>
 
-        {/* End Time Field */}
         <div>
           <label htmlFor="endTime" className="block text-sm font-medium">
             End Time:
@@ -191,19 +219,15 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
             type="text"
             id="endTime"
             {...register("endTime")}
-            step="1"
-            className={`mt-1 block w-full rounded-md shadow-sm =`}
+            className={`mt-1 block w-full rounded-md shadow-sm`}
           />
-          {errors.endTime?.message && (
-            <p className="text-red-500 text-sm">
-              {errors.endTime.message as string}
-            </p>
+          {errors.endTime && (
+            <p className="text-red-500 text-sm">{errors.endTime.message}</p>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Dentist ID Field */}
         <div>
           <label htmlFor="dentistId" className="block text-sm font-medium">
             Dentist ID:
@@ -212,14 +236,13 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
             type="number"
             id="dentistId"
             {...register("dentistId", { valueAsNumber: true })}
-            className={`mt-1 block w-full rounded-md  shadow-sm `}
+            className={`mt-1 block w-full rounded-md shadow-sm`}
           />
           {errors.dentistId && (
             <p className="text-red-500 text-sm">{errors.dentistId.message}</p>
           )}
         </div>
 
-        {/* Capacity Field */}
         <div>
           <label htmlFor="capacity" className="block text-sm font-medium">
             Capacity:
@@ -228,7 +251,7 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
             type="number"
             id="capacity"
             {...register("capacity", { valueAsNumber: true })}
-            className={`mt-1 block w-full rounded-md  shadow-sm `}
+            className={`mt-1 block w-full rounded-md shadow-sm`}
           />
           {errors.capacity && (
             <p className="text-red-500 text-sm">{errors.capacity.message}</p>
@@ -243,4 +266,4 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
   );
 };
 
-export default CreateScheduleForm;
+export default ScheduleEditForm;

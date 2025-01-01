@@ -11,7 +11,6 @@ export default function SchedulePage() {
   const { state, fetchSchedules } = useSchedules();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     setIsLoading(true);
     try {
@@ -32,6 +31,7 @@ export default function SchedulePage() {
 
   return (
     <div className="flex flex-col">
+      {/* Add Schedule Dialog */}
       <ResponsiveDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -40,6 +40,7 @@ export default function SchedulePage() {
       >
         <ScheduleForm setIsOpen={setIsOpen} />
       </ResponsiveDialog>
+
       <div className="pb-5 px-2 lg:px-0">
         <Tabs defaultValue="schedules">
           <TabsList className=" ">

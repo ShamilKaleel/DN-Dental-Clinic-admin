@@ -15,9 +15,9 @@ import DentistPage from "@/pages/Dentist/DentistPage";
 import PatientPage from "@/pages/Patient/PatientPage";
 import ReceptionistPage from "@/pages/Receptionist/ReceptionistPage";
 import SchedulePage from "@/pages/Schedule/SchedulePage";
-import AppointmentListPage from "@/pages/AppointmentList/TestPage";
-import { Divide } from "lucide-react";
-import ScheduleForm from "@/components/forms/schedule-form";
+import AppointmentListPage from "@/pages/AppointmentList/AppointmentList";
+
+import { Toaster } from "@/components/ui/toaster";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -70,11 +70,12 @@ export default function App() {
 
         {/* Public Routes only for testiong */}
         <Route path="/booking" element={<DataTableDemo />} />
-        <Route path="/test" element={<AppointmentListPage />} />
+        <Route path="/test" element={<SchedulePage />} />
 
         {/* Error Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <Toaster />
     </Router>
   );
 }

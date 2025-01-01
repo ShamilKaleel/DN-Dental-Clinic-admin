@@ -87,8 +87,11 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       try {
         const response = await axiosInstance.get<Booking[]>("/bookings/all");
         dispatch({ type: "FETCH_BOOKINGS", payload: response.data });
-      } catch (error) {
-        console.error("Failed to fetch bookings", error);
+      } catch (error: any) {
+        console.error(
+          error.response.data.error || "Failed to fetch bookings :",
+          error.response.data.message || error.message
+        );
       }
     };
 

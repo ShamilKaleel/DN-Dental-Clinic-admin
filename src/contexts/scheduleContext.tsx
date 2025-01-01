@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect, ReactNode } from "react";
+import { createContext, useReducer, ReactNode } from "react";
 import axiosInstance from "@/api/axiosInstance";
 
 // Schedule interface
@@ -42,13 +42,12 @@ export interface Booking {
   createdAt: string;
 }
 
-
-
 // Schedule API actions
 type ScheduleAction =
   | { type: "FETCH_SCHEDULES"; payload: Schedule[] }
   | { type: "CREATE_SCHEDULE"; payload: Schedule }
-  | { type: "DELETE_SCHEDULE"; payload: number };
+  | { type: "DELETE_SCHEDULE"; payload: number }
+  | { type: "UPDATE_SCHEDULE"; payload: Schedule };
 
 // Schedule state interface
 interface ScheduleState {
@@ -74,6 +73,12 @@ const scheduleReducer = (
       return {
         schedules: state.schedules.filter((s) => s.id !== action.payload),
       };
+    case "UPDATE_SCHEDULE":
+      return {
+        schedules: state.schedules.map((s) =>
+          s.id === action.payload.id ? action.payload : s
+        ),
+      };
     default:
       return state;
   }
@@ -92,6 +97,16 @@ export const ScheduleContext = createContext<{
     capacity: number
   ) => Promise<void>;
   deleteSchedule: (id: number) => Promise<void>;
+  updateSchedule: (
+    id: number,
+    date: string,
+    status: string,
+    startTime: string,
+    endTime: string,
+    dentistId: number,
+    capacity: number
+  ) => void;
+  getSchedule: (id: number) => Promise<Schedule>;
 } | null>(null);
 
 // Provider
@@ -115,19 +130,15 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     dentistId: number,
     capacity: number
   ) => {
-    try {
-      const response = await axiosInstance.post("/schedules/create", {
-        date,
-        status,
-        startTime,
-        endTime,
-        dentistId,
-        capacity,
-      });
-      dispatch({ type: "CREATE_SCHEDULE", payload: response.data });
-    } catch (error: any) {
-      console.error("bye", error);
-    }
+    const response = await axiosInstance.post("/schedules/create", {
+      date,
+      status,
+      startTime,
+      endTime,
+      dentistId,
+      capacity,
+    });
+    dispatch({ type: "CREATE_SCHEDULE", payload: response.data });
   };
 
   const deleteSchedule = async (id: number) => {
@@ -139,9 +150,48 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateSchedule = async (
+    id: number,
+    date: string,
+    status: string,
+    startTime: string,
+    endTime: string,
+    dentistId: number,
+    capacity: number
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/schedules/${id}`, {
+        date,
+        status,
+        startTime,
+        endTime,
+        dentistId,
+        capacity,
+      });
+      dispatch({
+        type: "UPDATE_SCHEDULE",
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error("Failed to update schedule", error);
+    }
+  };
+
+  const getSchedule = async (id: number) => {
+    const response = await axiosInstance.get<Schedule>(`/schedules/${id}`);
+    return response.data;
+  };
+
   return (
     <ScheduleContext.Provider
-      value={{ state, createSchedule, deleteSchedule, fetchSchedules }}
+      value={{
+        state,
+        createSchedule,
+        deleteSchedule,
+        fetchSchedules,
+        updateSchedule,
+        getSchedule,
+      }}
     >
       {children}
     </ScheduleContext.Provider>

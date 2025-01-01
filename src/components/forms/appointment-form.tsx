@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useBooking } from "@/hooks/useBooking";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
+import { useToast } from "@/hooks/use-toast";
+import Lorder from "@/components/Lorder";
 // Define Zod schema
 const bookingSchema = z.object({
   name: z
@@ -34,11 +35,11 @@ interface BookingFormProps {
 
 const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
   const { createBooking } = useBooking();
-
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
-    setError,
+
     formState: { errors, isSubmitting },
   } = useForm<BookingForm>({
     resolver: zodResolver(bookingSchema),
@@ -54,10 +55,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
         data.address,
         data.scheduleId
       );
+      setIsOpen(false);
+      toast({
+        title: "Booking successful",
+        description: "Booking created successfully",
+      });
     } catch (error: any) {
-      setError("root", {
-        type: "manual",
-        message: error.response?.data?.error || "Failed to create booking",
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `${error.response?.data?.error}`,
       });
     }
   };
@@ -169,7 +176,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitting} className="px-8">
-          {isSubmitting ? "Submitting..." : "Submit"}
+          {isSubmitting ? <Lorder /> : "Submit"}{" "}
         </Button>
 
         <p className=" text-center text-red-500  pl-1 absolute top-32 left-0 right-0">
