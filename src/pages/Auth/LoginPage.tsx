@@ -112,7 +112,10 @@ export default function LoginPage() {
                 {errors.password?.message}
               </p>
               <p className="text-right w-full block mt-5">
-                <Link to="/signup" className=" underline text-gray-500">
+                <Link
+                  to="/forget-password"
+                  className=" underline text-gray-500"
+                >
                   Forgot Password ?
                 </Link>
               </p>

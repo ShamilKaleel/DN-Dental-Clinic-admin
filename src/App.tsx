@@ -16,8 +16,9 @@ import PatientPage from "@/pages/Patient/PatientPage";
 import ReceptionistPage from "@/pages/Receptionist/ReceptionistPage";
 import SchedulePage from "@/pages/Schedule/SchedulePage";
 import AppointmentListPage from "@/pages/AppointmentList/AppointmentList";
-
+import ForgetPasswordPage from "./pages/Auth/ForgetPasswordPage";
 import { Toaster } from "@/components/ui/toaster";
+import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -71,7 +72,9 @@ export default function App() {
         {/* Public Routes only for testiong */}
         <Route path="/booking" element={<DataTableDemo />} />
         <Route path="/test" element={<SchedulePage />} />
+        <Route path="/forget-password" element={<ForgetPasswordPage />} />
 
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         {/* Error Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
