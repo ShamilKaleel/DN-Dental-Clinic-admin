@@ -41,8 +41,8 @@ export function DataTableRowActions<TData extends WithId<string>>({
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Person"
-        description="Are you sure you want to delete this person?"
+        title="Delete Schedule"
+        description="Are you sure you want to delete this Schedule?"
       >
         <ScheduleDeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
       </ResponsiveDialog>

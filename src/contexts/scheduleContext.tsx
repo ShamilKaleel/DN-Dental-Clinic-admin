@@ -142,12 +142,8 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteSchedule = async (id: number) => {
-    try {
-      await axiosInstance.delete(`/schedules/${id}`);
-      dispatch({ type: "DELETE_SCHEDULE", payload: id });
-    } catch (error) {
-      console.error("Failed to delete schedule", error);
-    }
+    await axiosInstance.delete(`/schedules/${id}`);
+    dispatch({ type: "DELETE_SCHEDULE", payload: id });
   };
 
   const updateSchedule = async (

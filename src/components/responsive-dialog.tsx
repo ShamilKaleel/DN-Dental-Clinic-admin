@@ -43,9 +43,7 @@ export function ResponsiveDialog({
           <DialogHeader>
             <DialogTitle className="">{title}</DialogTitle>
             {description && (
-              <DialogDescription className=" text-center">
-                {description}
-              </DialogDescription>
+              <DialogDescription className=" ">{description}</DialogDescription>
             )}
           </DialogHeader>
           {children}

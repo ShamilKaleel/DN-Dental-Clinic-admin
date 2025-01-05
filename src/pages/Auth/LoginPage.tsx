@@ -1,12 +1,12 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Card } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Lorder from "@/components/Lorder";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+
 import LoginImage from "@/assets/images/LoginImage.png";
 import Pattern from "@/assets/images/Pattern.png";
 import { useAuth } from "@/hooks/useAuth";

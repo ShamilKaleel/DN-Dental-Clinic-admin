@@ -72,9 +72,19 @@ export default function App() {
         {/* Public Routes only for testiong */}
         <Route path="/booking" element={<DataTableDemo />} />
         <Route path="/test" element={<SchedulePage />} />
-        <Route path="/forget-password" element={<ForgetPasswordPage />} />
+        <Route
+          path="/forget-password"
+          element={
+            !authState ? <ForgetPasswordPage /> : <Navigate to="/" replace />
+          }
+        />
 
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route
+          path="/reset-password"
+          element={
+            !authState ? <ResetPasswordPage /> : <Navigate to="/" replace />
+          }
+        />
         {/* Error Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

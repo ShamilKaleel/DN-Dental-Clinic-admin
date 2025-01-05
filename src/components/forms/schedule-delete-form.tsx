@@ -19,7 +19,7 @@ const ScheduleDeleteForm: React.FC<ScheduleDeleteFormProps> = ({
     try {
       await deleteSchedule(parseInt(cardId, 10));
 
-      setIsOpen(false); // Close dialog after successful deletion
+      // Close dialog after successful deletion
 
       toast({
         title: "Schedule deleted",
@@ -27,23 +27,27 @@ const ScheduleDeleteForm: React.FC<ScheduleDeleteFormProps> = ({
       });
     } catch (error: any) {
       console.error("Error deleting schedule:", error);
+      setIsDeleting(false);
       toast({
         title: "Uh oh! Something went wrong.",
-        description: `${error.response?.data?.error || "An error occurred"}`,
+        description:
+          error.response?.data?.details?.error || "An error occurred",
         variant: "destructive",
       });
     } finally {
       setIsDeleting(false);
+      setIsOpen(false);
     }
   };
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-center gap-2">
+      <div className="grid grid-flow-col gap-5 px-4">
         <Button
-          variant="ghost"
+          variant="outline"
           onClick={() => setIsOpen(false)}
           disabled={isDeleting}
+          className="w-full"
         >
           Cancel
         </Button>
@@ -51,6 +55,7 @@ const ScheduleDeleteForm: React.FC<ScheduleDeleteFormProps> = ({
           variant="destructive"
           onClick={handleDelete}
           disabled={isDeleting}
+          className="w-full"
         >
           {isDeleting ? "Deleting..." : "Delete"}
         </Button>
