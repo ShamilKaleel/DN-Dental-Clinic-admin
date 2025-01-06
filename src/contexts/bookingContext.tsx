@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 // Booking interface
 export interface Booking {
-  referenceId: number;
+  referenceId: string;
   name: string;
   nic: string;
   contactNumber: string;
@@ -30,7 +30,7 @@ export interface CreateBooking {
 type BookingAction =
   | { type: "FETCH_BOOKINGS"; payload: Booking[] }
   | { type: "CREATE_BOOKING"; payload: Booking }
-  | { type: "DELETE_BOOKING"; payload: number };
+  | { type: "DELETE_BOOKING"; payload: string };
 
 // Booking state interface
 interface BookingState {
@@ -75,7 +75,7 @@ export const BookingContext = createContext<{
     address: string,
     scheduleId: number
   ) => Promise<void>;
-  deleteBooking: (id: number) => Promise<void>;
+  deleteBooking: (id: string) => Promise<void>;
 } | null>(null);
 
 export const BookingProvider = ({ children }: { children: ReactNode }) => {
@@ -117,13 +117,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CREATE_BOOKING", payload: response.data });
   };
 
-  const deleteBooking = async (id: number) => {
-    try {
-      await axiosInstance.delete(`/bookings/${id}`);
-      dispatch({ type: "DELETE_BOOKING", payload: id });
-    } catch (error) {
-      console.error("Failed to delete booking", error);
-    }
+  const deleteBooking = async (id: string) => {
+    await axiosInstance.delete(`/bookings/${id}`);
+    dispatch({ type: "DELETE_BOOKING", payload: id });
   };
 
   return (

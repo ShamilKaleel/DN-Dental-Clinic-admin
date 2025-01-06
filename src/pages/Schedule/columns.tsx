@@ -4,7 +4,7 @@ import StatusBar from "./data-table-status-bar";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 export interface Booking {
-  referenceId: number;
+  referenceId: string;
   name: string;
   nic: string;
   contactNumber: string;
@@ -18,7 +18,7 @@ export interface Booking {
 }
 
 export interface Schedule {
-  id: number;
+  id: string;
   date: string;
   dayOfWeek: string;
   status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";

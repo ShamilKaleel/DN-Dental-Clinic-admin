@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSchedules } from "@/hooks/useSchedule";
 import { useToast } from "@/hooks/use-toast";
+import Lorder from "../Lorder";
 
 const editScheduleSchema = z.object({
   date: z
@@ -71,6 +72,7 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
   cardId,
   setIsOpen,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
   const { toast } = useToast();
   const { getSchedule, updateSchedule } = useSchedules();
@@ -83,9 +85,10 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
     resolver: zodResolver(editScheduleSchema),
   });
 
-  const scheduleId = parseInt(cardId, 10);
+  const scheduleId = cardId;
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchSchedule = async () => {
       try {
         const schedule = await getSchedule(scheduleId);
@@ -97,16 +100,19 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
         setValue("capacity", schedule.capacity);
         setDate(new Date(schedule.date));
       } catch (error: any) {
+        setIsOpen;
         toast({
           title: "Error fetching schedule",
           description: error.response?.data?.error || "An error occurred",
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchSchedule();
-  }, [parseInt(cardId, 10), setValue, toast, getSchedule]);
+  }, [cardId, setValue, toast, getSchedule]);
 
   const onSubmit: SubmitHandler<EditSchedule> = async (data) => {
     try {
@@ -132,6 +138,14 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-60">
+        <Lorder />
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-5 md:px-0">

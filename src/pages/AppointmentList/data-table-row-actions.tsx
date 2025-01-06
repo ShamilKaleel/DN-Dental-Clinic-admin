@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ScheduleDeleteForm from "@/components/forms/schedule-delete-form";
+import AppointmentDeleteForm from "@/components/forms/appointment-delete-form";
 import ScheduleEditForm from "@/components/forms/schedule-edite-form";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { Row } from "@tanstack/react-table";
 import { MoreHorizontal, SquarePen, Trash2, Copy } from "lucide-react";
 
 interface WithId<T> {
-  id: string;
+  referenceId: string;
 }
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -26,7 +26,7 @@ export function DataTableRowActions<TData extends WithId<string>>({
 }: DataTableRowActionsProps<TData>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const cardId = row.original.id as string;
+  const cardId = row.original.referenceId as string;
   return (
     <>
       <ResponsiveDialog
@@ -41,10 +41,10 @@ export function DataTableRowActions<TData extends WithId<string>>({
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Schedule"
-        description="Are you sure you want to delete this Schedule?"
+        title="Delete Appointment"
+        description="Are you sure you want to delete this Appointment?"
       >
-        <ScheduleDeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
+        <AppointmentDeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
       </ResponsiveDialog>
 
       <DropdownMenu>
@@ -68,7 +68,9 @@ export function DataTableRowActions<TData extends WithId<string>>({
           </DropdownMenuItem>
           <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base  ">
             <button
-              onClick={() => navigator.clipboard.writeText(row.original.id)}
+              onClick={() =>
+                navigator.clipboard.writeText(row.original.referenceId)
+              }
               className="w-full justify-start flex rounded-md p-2 transition-all duration-75 "
             >
               <Copy className="h-4 w-4 mr-2" />

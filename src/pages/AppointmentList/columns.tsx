@@ -4,7 +4,7 @@ import StatusBar from "./data-table-status-bar";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 export interface Booking {
-  referenceId: number;
+  referenceId: string;
   name: string;
   nic: string;
   contactNumber: string;

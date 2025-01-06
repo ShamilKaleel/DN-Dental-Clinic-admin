@@ -1,9 +1,9 @@
-import { createContext, useReducer, ReactNode, useEffect } from "react";
+import { createContext, useReducer, ReactNode,  } from "react";
 import axiosInstance from "@/api/axiosInstance";
 
 // Dentist interface
 export interface Dentist {
-  id: number;
+  id: string;
   userName: string;
   email: string;
   gender: string;
@@ -33,7 +33,7 @@ type DentistAction =
   | { type: "FETCH_DENTISTS"; payload: Dentist[] }
   | { type: "CREATE_DENTIST"; payload: Dentist }
   | { type: "UPDATE_DENTIST"; payload: Dentist }
-  | { type: "DELETE_DENTIST"; payload: number };
+  | { type: "DELETE_DENTIST"; payload: string };
 
 // Dentist state
 interface DentistState {
@@ -74,63 +74,51 @@ const dentistReducer = (
 // Context
 export const DentistContext = createContext<{
   dentistState: DentistState;
-  createDentist: (dentist: Dentist) => Promise<void>;
+  fetchDentists: () => Promise<void>;
+  createDentist: (dentist: CreateDentist) => Promise<void>;
   updateDentist: (id: number, dentist: Dentist) => Promise<void>;
-  deleteDentist: (id: number) => Promise<void>;
+  deleteDentist: (id: string) => Promise<void>;
 } | null>(null);
 
 // Provider
 export const DentistProvider = ({ children }: { children: ReactNode }) => {
   const [dentistState, dispatch] = useReducer(dentistReducer, initialState);
 
-  useEffect(() => {
-    const fetchDentists = async () => {
-      try {
-        const response = await axiosInstance.get("/dentist/all");
-        dispatch({ type: "FETCH_DENTISTS", payload: response.data });
-      } catch (error) {
-        console.error("Failed to fetch dentists", error);
-      }
-    };
-    fetchDentists();
-  }, []);
+  const fetchDentists = async () => {
+    const response = await axiosInstance.get("/dentist/all");
+    dispatch({ type: "FETCH_DENTISTS", payload: response.data });
+  };
 
-  const createDentist = async (dentist: Dentist) => {
-    try {
-      const response = await axiosInstance.post<Dentist>(
-        "/dentist/create",
-        dentist
-      );
-      dispatch({ type: "CREATE_DENTIST", payload: response.data });
-    } catch (error) {
-      console.error("Failed to create dentist", error);
-    }
+  const createDentist = async (dentist: CreateDentist) => {
+    const response = await axiosInstance.post<Dentist>(
+      "/dentist/create",
+      dentist
+    );
+    dispatch({ type: "CREATE_DENTIST", payload: response.data });
   };
 
   const updateDentist = async (id: number, dentist: Dentist) => {
-    try {
-      const response = await axiosInstance.put<Dentist>(
-        `/dentist/${id}`,
-        dentist
-      );
-      dispatch({ type: "UPDATE_DENTIST", payload: response.data });
-    } catch (error) {
-      console.error("Failed to update dentist", error);
-    }
+    const response = await axiosInstance.put<Dentist>(
+      `/dentist/${id}`,
+      dentist
+    );
+    dispatch({ type: "UPDATE_DENTIST", payload: response.data });
   };
 
-  const deleteDentist = async (id: number) => {
-    try {
-      await axiosInstance.delete(`/dentist/${id}`);
-      dispatch({ type: "DELETE_DENTIST", payload: id });
-    } catch (error) {
-      console.error("Failed to delete dentist", error);
-    }
+  const deleteDentist = async (id: string) => {
+    await axiosInstance.delete(`/dentist/${id}`);
+    dispatch({ type: "DELETE_DENTIST", payload: id });
   };
 
   return (
     <DentistContext.Provider
-      value={{ dentistState, createDentist, updateDentist, deleteDentist }}
+      value={{
+        dentistState,
+        fetchDentists,
+        createDentist,
+        updateDentist,
+        deleteDentist,
+      }}
     >
       {children}
     </DentistContext.Provider>

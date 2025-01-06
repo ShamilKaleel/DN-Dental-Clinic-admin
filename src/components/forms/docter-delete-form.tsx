@@ -1,32 +1,32 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useSchedules } from "@/hooks/useSchedule"; // Assumes you have this hook
+import { useDentist } from "@/hooks/useDentist"; // Assumes you have this hook
 import { useToast } from "@/hooks/use-toast";
-interface ScheduleDeleteFormProps {
+interface DocterDeleteFormProps {
   cardId: string;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const ScheduleDeleteForm: React.FC<ScheduleDeleteFormProps> = ({
+const DocterDeleteForm: React.FC<DocterDeleteFormProps> = ({
   cardId,
   setIsOpen,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
-  const { deleteSchedule } = useSchedules(); // Custom hook for managing schedules
+  const { deleteDentist } = useDentist(); // Custom hook for managing schedules
   const { toast } = useToast();
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteSchedule(cardId);
+      await deleteDentist(cardId);
 
       // Close dialog after successful deletion
 
       toast({
-        title: "Schedule deleted",
+        title: "Docter deleted",
         description: "Schedule deleted successfully",
       });
     } catch (error: any) {
-      console.error("Error deleting schedule:", error);
+      console.error("Error deleting Docter:", error);
       setIsDeleting(false);
       toast({
         title: "Uh oh! Something went wrong.",
@@ -64,4 +64,4 @@ const ScheduleDeleteForm: React.FC<ScheduleDeleteFormProps> = ({
   );
 };
 
-export default ScheduleDeleteForm;
+export default DocterDeleteForm;

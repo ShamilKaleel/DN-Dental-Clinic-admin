@@ -3,7 +3,7 @@ import axiosInstance from "@/api/axiosInstance";
 
 // Schedule interface
 export interface Schedule {
-  id: number;
+  id: string;
   date: string;
   dayOfWeek: string;
   status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
@@ -23,7 +23,7 @@ export interface CreateSchedule {
   status: string;
   startTime: string;
   endTime: string;
-  dentistId: number;
+  dentistId: string;
   capacity: number;
 }
 
@@ -46,7 +46,7 @@ export interface Booking {
 type ScheduleAction =
   | { type: "FETCH_SCHEDULES"; payload: Schedule[] }
   | { type: "CREATE_SCHEDULE"; payload: Schedule }
-  | { type: "DELETE_SCHEDULE"; payload: number }
+  | { type: "DELETE_SCHEDULE"; payload: string }
   | { type: "UPDATE_SCHEDULE"; payload: Schedule };
 
 // Schedule state interface
@@ -96,9 +96,9 @@ export const ScheduleContext = createContext<{
     dentistId: number,
     capacity: number
   ) => Promise<void>;
-  deleteSchedule: (id: number) => Promise<void>;
+  deleteSchedule: (id: string) => Promise<void>;
   updateSchedule: (
-    id: number,
+    id: string,
     date: string,
     status: string,
     startTime: string,
@@ -106,7 +106,7 @@ export const ScheduleContext = createContext<{
     dentistId: number,
     capacity: number
   ) => void;
-  getSchedule: (id: number) => Promise<Schedule>;
+  getSchedule: (id: string) => Promise<Schedule>;
 } | null>(null);
 
 // Provider
@@ -141,13 +141,13 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CREATE_SCHEDULE", payload: response.data });
   };
 
-  const deleteSchedule = async (id: number) => {
+  const deleteSchedule = async (id: string) => {
     await axiosInstance.delete(`/schedules/${id}`);
     dispatch({ type: "DELETE_SCHEDULE", payload: id });
   };
 
   const updateSchedule = async (
-    id: number,
+    id: string,
     date: string,
     status: string,
     startTime: string,
@@ -173,7 +173,7 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getSchedule = async (id: number) => {
+  const getSchedule = async (id: string) => {
     const response = await axiosInstance.get<Schedule>(`/schedules/${id}`);
     return response.data;
   };
