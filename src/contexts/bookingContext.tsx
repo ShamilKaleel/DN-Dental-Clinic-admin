@@ -1,30 +1,7 @@
 import { createContext, useReducer, ReactNode, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { useAuth } from "@/hooks/useAuth";
-
-// Booking interface
-export interface Booking {
-  referenceId: string;
-  name: string;
-  nic: string;
-  contactNumber: string;
-  email: string;
-  address: string;
-  scheduleId: number;
-  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
-  date: string;
-  dayofweek: string;
-  createdAt: string;
-}
-
-export interface CreateBooking {
-  name: string;
-  nic: string;
-  contactNumber: string;
-  email: string;
-  address: string;
-  scheduleId: number;
-}
+import { Booking, CreateBooking } from "@/types/booking";
 
 // Booking API actions
 type BookingAction =
@@ -67,14 +44,7 @@ const bookingReducer = (
 export const BookingContext = createContext<{
   state: BookingState;
 
-  createBooking: (
-    name: string,
-    nic: string,
-    contactNumber: string,
-    email: string,
-    address: string,
-    scheduleId: number
-  ) => Promise<void>;
+  createBooking: (booking: CreateBooking) => Promise<void>;
   deleteBooking: (id: string) => Promise<void>;
 } | null>(null);
 
@@ -98,22 +68,8 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     fetchBookings();
   }, [authState]);
 
-  const createBooking = async (
-    name: string,
-    nic: string,
-    contactNumber: string,
-    email: string,
-    address: string,
-    scheduleId: number
-  ) => {
-    const response = await axiosInstance.post("/bookings/create", {
-      name,
-      nic,
-      contactNumber,
-      email,
-      address,
-      scheduleId,
-    });
+  const createBooking = async (booking: CreateBooking) => {
+    const response = await axiosInstance.post("/bookings/create", booking);
     dispatch({ type: "CREATE_BOOKING", payload: response.data });
   };
 

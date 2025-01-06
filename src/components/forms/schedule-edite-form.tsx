@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { useSchedules } from "@/hooks/useSchedule";
 import { useToast } from "@/hooks/use-toast";
 import Lorder from "../Lorder";
+import { CreateSchedule } from "@/types/schedule";
 
 const editScheduleSchema = z.object({
   date: z
@@ -118,12 +119,7 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
     try {
       await updateSchedule(
         scheduleId,
-        data.date,
-        data.status,
-        data.startTime,
-        data.endTime,
-        data.dentistId,
-        data.capacity
+       data as CreateSchedule
       );
       setIsOpen(false);
       toast({

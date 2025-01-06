@@ -1,32 +1,6 @@
-import { createContext, useReducer, ReactNode,  } from "react";
+import { createContext, useReducer, ReactNode } from "react";
 import axiosInstance from "@/api/axiosInstance";
-
-// Dentist interface
-export interface Dentist {
-  id: string;
-  userName: string;
-  email: string;
-  gender: string;
-  firstName: string;
-  specialization: string;
-  licenseNumber: string;
-  nic: string;
-  phoneNumber: string;
-  roles: string[];
-}
-
-// CreateDentist type
-export interface CreateDentist {
-  userName: string;
-  email: string;
-  gender: string;
-  firstName: string;
-  specialization: string;
-  licenseNumber: string;
-  nic: string;
-  phoneNumber: string;
-  password: string;
-}
+import { Dentist, CreateDentist } from "@/types/dentist";
 
 // Actions for Dentist
 type DentistAction =

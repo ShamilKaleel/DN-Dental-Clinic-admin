@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Lorder from "@/components/Lorder";
+import { CreateBooking } from "@/types/booking";
+
 // Define Zod schema
 const bookingSchema = z.object({
   name: z
@@ -47,24 +49,18 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
 
   const onSubmit: SubmitHandler<BookingForm> = async (data) => {
     try {
-      await createBooking(
-        data.name,
-        data.nic,
-        data.contactNumber,
-        data.email,
-        data.address,
-        data.scheduleId
-      );
+      await createBooking(data as CreateBooking);
       setIsOpen(false);
       toast({
         title: "Booking successful",
         description: "Booking created successfully",
       });
     } catch (error: any) {
+      console.log(error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: `${error.response?.data?.error}`,
+        description: `${error.response?.data?.details.error || error.message}`,
       });
     }
   };

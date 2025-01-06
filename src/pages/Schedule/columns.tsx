@@ -2,35 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import StatusBar from "./data-table-status-bar";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { Schedule } from "@/types/schedule";
 
-export interface Booking {
-  referenceId: string;
-  name: string;
-  nic: string;
-  contactNumber: string;
-  email: string;
-  address: string;
-  scheduleId: number;
-  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
-  date: string;
-  dayofweek: string;
-  createdAt: string;
-}
-
-export interface Schedule {
-  id: string;
-  date: string;
-  dayOfWeek: string;
-  status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
-  numberOfBookings: number;
-  bookings: Booking[];
-  startTime: string;
-  endTime: string;
-  duration: number;
-  dentistId: number;
-  createdAt: string;
-  capacity: number;
-}
 export const columns: ColumnDef<Schedule>[] = [
   {
     accessorKey: "id",

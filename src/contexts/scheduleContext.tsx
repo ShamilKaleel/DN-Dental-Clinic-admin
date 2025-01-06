@@ -1,46 +1,8 @@
 import { createContext, useReducer, ReactNode } from "react";
 import axiosInstance from "@/api/axiosInstance";
+import { Schedule, CreateSchedule } from "@/types/schedule";
 
 // Schedule interface
-export interface Schedule {
-  id: string;
-  date: string;
-  dayOfWeek: string;
-  status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
-  numberOfBookings: number;
-  bookings: Booking[];
-  startTime: string;
-  endTime: string;
-  duration: number;
-  dentistId: number;
-  createdAt: string;
-  capacity: number;
-}
-
-// Create Schedule interface
-export interface CreateSchedule {
-  date: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  dentistId: string;
-  capacity: number;
-}
-
-// Booking interface
-export interface Booking {
-  referenceId: string;
-  name: string;
-  nic: string;
-  contactNumber: string;
-  email: string;
-  address: string;
-  scheduleId: number;
-  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
-  date: string;
-  dayOfWeek: string;
-  createdAt: string;
-}
 
 // Schedule API actions
 type ScheduleAction =
@@ -88,24 +50,9 @@ const scheduleReducer = (
 export const ScheduleContext = createContext<{
   state: ScheduleState;
   fetchSchedules: () => Promise<void>;
-  createSchedule: (
-    date: string,
-    status: string,
-    startTime: string,
-    endTime: string,
-    dentistId: number,
-    capacity: number
-  ) => Promise<void>;
+  createSchedule: (schedule: CreateSchedule) => Promise<void>;
   deleteSchedule: (id: string) => Promise<void>;
-  updateSchedule: (
-    id: string,
-    date: string,
-    status: string,
-    startTime: string,
-    endTime: string,
-    dentistId: number,
-    capacity: number
-  ) => void;
+  updateSchedule: (id: string, schedule: CreateSchedule) => Promise<void>;
   getSchedule: (id: string) => Promise<Schedule>;
 } | null>(null);
 
@@ -122,22 +69,8 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const createSchedule = async (
-    date: string,
-    status: string,
-    startTime: string,
-    endTime: string,
-    dentistId: number,
-    capacity: number
-  ) => {
-    const response = await axiosInstance.post("/schedules/create", {
-      date,
-      status,
-      startTime,
-      endTime,
-      dentistId,
-      capacity,
-    });
+  const createSchedule = async (schedule: CreateSchedule) => {
+    const response = await axiosInstance.post("/schedules/create", schedule);
     dispatch({ type: "CREATE_SCHEDULE", payload: response.data });
   };
 
@@ -146,31 +79,12 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "DELETE_SCHEDULE", payload: id });
   };
 
-  const updateSchedule = async (
-    id: string,
-    date: string,
-    status: string,
-    startTime: string,
-    endTime: string,
-    dentistId: number,
-    capacity: number
-  ) => {
-    try {
-      const response = await axiosInstance.put(`/schedules/${id}`, {
-        date,
-        status,
-        startTime,
-        endTime,
-        dentistId,
-        capacity,
-      });
-      dispatch({
-        type: "UPDATE_SCHEDULE",
-        payload: response.data,
-      });
-    } catch (error) {
-      console.error("Failed to update schedule", error);
-    }
+  const updateSchedule = async (id: string, schedule: CreateSchedule) => {
+    const response = await axiosInstance.put(`/schedules/${id}`, schedule);
+    dispatch({
+      type: "UPDATE_SCHEDULE",
+      payload: response.data,
+    });
   };
 
   const getSchedule = async (id: string) => {

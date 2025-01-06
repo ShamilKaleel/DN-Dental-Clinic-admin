@@ -1,4 +1,4 @@
-import { Booking } from "./Booking";
+import { Booking } from "./booking";
 
 export interface Schedule {
   id: string;
@@ -18,9 +18,9 @@ export interface Schedule {
 // Create Schedule interface
 export interface CreateSchedule {
   date: string;
-  status: string;
+  status: "AVAILABLE" | "UNAVAILABLE" | "FULL";
   startTime: string;
   endTime: string;
-  dentistId: string;
+  dentistId: number;
   capacity: number;
 }

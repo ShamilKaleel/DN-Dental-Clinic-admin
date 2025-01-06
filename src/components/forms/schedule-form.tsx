@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSchedules } from "@/hooks/useSchedule";
 import { useToast } from "@/hooks/use-toast";
+import { CreateSchedule } from "@/types/schedule";
+
 // Zod schema for validation
 const createScheduleSchema = z.object({
   date: z
@@ -58,7 +60,7 @@ const createScheduleSchema = z.object({
 });
 
 // TypeScript type inferred from Zod schema
-type CreateSchedule = z.infer<typeof createScheduleSchema>;
+type ScheduleForm = z.infer<typeof createScheduleSchema>;
 
 interface ScheduleFormProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -73,21 +75,14 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<CreateSchedule>({
+  } = useForm<ScheduleForm>({
     resolver: zodResolver(createScheduleSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateSchedule> = async (data) => {
+  const onSubmit: SubmitHandler<ScheduleForm> = async (data) => {
     console.log(data);
     try {
-      await createSchedule(
-        data.date,
-        data.status,
-        data.startTime,
-        data.endTime,
-        data.dentistId,
-        data.capacity
-      );
+      await createSchedule(data as CreateSchedule);
       setIsOpen(false);
       toast({
         title: "Schedule Created",

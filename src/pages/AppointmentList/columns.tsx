@@ -2,20 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import StatusBar from "./data-table-status-bar";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { Booking } from "@/types/booking";
 
-export interface Booking {
-  referenceId: string;
-  name: string;
-  nic: string;
-  contactNumber: string;
-  email: string;
-  address: string;
-  scheduleId: number;
-  status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
-  date: string;
-  dayofweek: string;
-  createdAt: string;
-}
 export const columns: ColumnDef<Booking>[] = [
   {
     accessorKey: "referenceId",

@@ -1,20 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
-import StatusBar from "./data-table-status-bar";
 import { DataTableRowActions } from "./data-table-row-actions";
-
-export interface Dentist {
-  id: string;
-  userName: string;
-  email: string;
-  gender: string;
-  firstName: string;
-  specialization: string;
-  licenseNumber: string;
-  nic: string;
-  phoneNumber: string;
-  roles: string[];
-}
+import { Dentist } from "@/types/dentist";
 
 export const columns: ColumnDef<Dentist>[] = [
   {
