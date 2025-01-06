@@ -2,7 +2,7 @@ export interface Dentist {
   id: string;
   userName: string;
   email: string;
-  gender: string;
+  gender: "Male" | "Female";
   firstName: string;
   specialization: string;
   licenseNumber: string;
@@ -15,7 +15,7 @@ export interface Dentist {
 export interface CreateDentist {
   userName: string;
   email: string;
-  gender: string;
+  gender: "Male" | "Female";
   firstName: string;
   specialization: string;
   licenseNumber: string;

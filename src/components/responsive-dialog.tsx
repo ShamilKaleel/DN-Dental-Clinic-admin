@@ -41,7 +41,9 @@ export function ResponsiveDialog({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className={`${className ?? "sm:max-w-[425px] "}`}>
           <DialogHeader>
-            <DialogTitle className="">{title}</DialogTitle>
+            <DialogTitle className="text-2xl font-bold mb-4">
+              {title}
+            </DialogTitle>
             {description && (
               <DialogDescription className=" ">{description}</DialogDescription>
             )}

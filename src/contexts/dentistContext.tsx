@@ -50,8 +50,9 @@ export const DentistContext = createContext<{
   dentistState: DentistState;
   fetchDentists: () => Promise<void>;
   createDentist: (dentist: CreateDentist) => Promise<void>;
-  updateDentist: (id: number, dentist: Dentist) => Promise<void>;
+  updateDentist: (id: string, dentist: Dentist) => Promise<void>;
   deleteDentist: (id: string) => Promise<void>;
+  getDentistById: (id: string) => Promise<Dentist>;
 } | null>(null);
 
 // Provider
@@ -71,7 +72,7 @@ export const DentistProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CREATE_DENTIST", payload: response.data });
   };
 
-  const updateDentist = async (id: number, dentist: Dentist) => {
+  const updateDentist = async (id: string, dentist: Dentist) => {
     const response = await axiosInstance.put<Dentist>(
       `/dentist/${id}`,
       dentist
@@ -84,6 +85,11 @@ export const DentistProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "DELETE_DENTIST", payload: id });
   };
 
+  const getDentistById = async (id: string) => {
+    const response = await axiosInstance.get<Dentist>(`/dentist/${id}`);
+    return response.data;
+  };
+
   return (
     <DentistContext.Provider
       value={{
@@ -92,6 +98,7 @@ export const DentistProvider = ({ children }: { children: ReactNode }) => {
         createDentist,
         updateDentist,
         deleteDentist,
+        getDentistById,
       }}
     >
       {children}

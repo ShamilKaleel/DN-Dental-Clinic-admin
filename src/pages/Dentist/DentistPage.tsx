@@ -37,7 +37,7 @@ export default function DentistPage() {
       <ResponsiveDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        title="Add Schedule"
+        title="Add Doctor"
         className="sm:max-w-screen-md p-20"
       >
         <DoctorForm setIsOpen={setIsOpen} />

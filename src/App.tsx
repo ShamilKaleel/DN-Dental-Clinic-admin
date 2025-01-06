@@ -9,7 +9,7 @@ import SignupPage from "@/pages/Auth/SignupPage";
 import NotFoundPage from "@/pages/Auth/NotFoundPage";
 import { useAuth } from "@/hooks/useAuth";
 import DataTableDemo from "@/pages/TestingPages/DataTableDemo";
-import Dashboard from "@/pages/Dashboard/DashboardPage";
+import DashboardPage from "@/pages/Dashboard/DashboardPage";
 import AdminPage from "@/pages/Admin/AdminPage";
 import DentistPage from "@/pages/Dentist/DentistPage";
 import PatientPage from "@/pages/Patient/PatientPage";
@@ -19,6 +19,7 @@ import AppointmentListPage from "@/pages/AppointmentList/AppointmentList";
 import ForgetPasswordPage from "./pages/Auth/ForgetPasswordPage";
 import { Toaster } from "@/components/ui/toaster";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
+import Layout from "./Layout";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -49,7 +50,7 @@ export default function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout />
             </ProtectedRoute>
           }
         >
@@ -57,7 +58,7 @@ export default function App() {
             index
             element={
               <div>
-                <DataTableDemo />
+                <DashboardPage />
               </div>
             }
           />

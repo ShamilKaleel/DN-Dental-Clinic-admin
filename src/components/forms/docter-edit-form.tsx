@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDentist } from "@/hooks/useDentist";
 import { useToast } from "@/hooks/use-toast";
+import Lorder from "@/components/Lorder";
+import { Dentist } from "@/types/dentist";
 import { Button } from "@/components/ui/button";
-import { CreateDentist } from "@/types/dentist";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,81 +15,93 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Lorder from "@/components/Lorder";
-import { Input } from "@/components/ui/input";
-const doctorSchema = z.object({
+
+const doctorEditSchema = z.object({
   userName: z.string().min(3, "Username must be at least 3 characters long"),
   email: z.string().email("Invalid email address"),
   gender: z.enum(["Male", "Female"]).refine((val) => val !== undefined, {
     message: "Gender is required",
   }),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one digit")
-    .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
   firstName: z.string().min(1, "First Name is required"),
   specialization: z.string().min(1, "Specialization is required"),
   licenseNumber: z.string().min(1, "License Number is required"),
   nic: z
     .string()
-    .regex(/^(\d{9}[VX]|[1-9]\d{11})$/, "Please enter a valid NIC number")
+    .regex(/^\d{9}[VX]|[1-9]\d{11}$/i, "Please enter a valid NIC number")
     .min(10, "NIC number should be 10 characters")
     .max(12, "NIC number should be 12 characters"),
   phoneNumber: z.string().regex(/^\d{10}$/, "Phone Number must be 10 digits"),
 });
 
-export type DoctorFormInputs = z.infer<typeof doctorSchema>;
+export type DoctorEditFormInputs = z.infer<typeof doctorEditSchema>;
 
-interface DocterFormProps {
+interface EditDoctorFormProps {
+  cardId: string; // The ID of the doctor to be edited
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
-  const { createDentist } = useDentist();
+const DoctorEditForm: React.FC<EditDoctorFormProps> = ({
+  cardId,
+  setIsOpen,
+}) => {
+  const { getDentistById, updateDentist } = useDentist();
   const { toast } = useToast();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
     setValue,
-    reset,
-  } = useForm<DoctorFormInputs>({
-    resolver: zodResolver(doctorSchema),
+    formState: { errors, isSubmitting },
+  } = useForm<DoctorEditFormInputs>({
+    resolver: zodResolver(doctorEditSchema),
   });
 
-  const onSubmit = async (data: DoctorFormInputs) => {
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const doctor = await getDentistById(cardId);
+        setValue("userName", doctor.userName);
+        setValue("email", doctor.email);
+        setValue("gender", doctor.gender);
+        setValue("firstName", doctor.firstName);
+        setValue("specialization", doctor.specialization);
+        setValue("licenseNumber", doctor.licenseNumber);
+        setValue("nic", doctor.nic);
+        setValue("phoneNumber", doctor.phoneNumber);
+      } catch (error) {
+        toast({
+          title: "Error loading doctor",
+          description: "Could not load doctor details",
+          variant: "destructive",
+        });
+      }
+    };
+
+    fetchDoctor();
+  }, [cardId, getDentistById, setValue, toast]);
+
+  const onSubmit = async (data: DoctorEditFormInputs) => {
     try {
-      await createDentist(data as CreateDentist);
+      await updateDentist(cardId, data as Dentist);
 
       toast({
-        title: "Doctor Created",
-        description:
-          "New Doctor has been added Doctor user name: " + data.userName,
+        title: "Doctor Updated",
+        description: "Doctor details have been updated successfully.",
       });
-      reset();
       setIsOpen(false);
     } catch (error: any) {
+      console.log(error.response?.data);
       toast({
-        title: "Error creating doctor",
+        title: "Error updating doctor",
         description: error.response?.data?.details.error || "An error occurred",
         variant: "destructive",
       });
-
-      console.error(
-        "Error creating doctor:",
-        error.response?.data?.details.error
-      );
     }
   };
 
   return (
-    <div className="w-full   rounded ">
+    <div className="w-full rounded">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Add this div to wrap the input fields */}
         <div className="grid grid-cols-2 gap-5">
           <div>
             <label htmlFor="userName" className="block font-medium">
@@ -95,7 +109,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="userName"
-              placeholder="Enter username"
               {...register("userName")}
               className="w-full border p-2 rounded"
             />
@@ -110,7 +123,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="email"
-              placeholder="Enter email"
               {...register("email")}
               className="w-full border p-2 rounded"
             />
@@ -120,7 +132,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
           </div>
         </div>
 
-        {/* Add this div to wrap the input fields */}
         <div className="grid grid-cols-2 gap-5">
           <div>
             <label htmlFor="firstName" className="block font-medium">
@@ -128,7 +139,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="firstName"
-              placeholder="Enter first name"
               {...register("firstName")}
               className="w-full border p-2 rounded"
             />
@@ -153,14 +163,12 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
                 <SelectItem value="Female">Female</SelectItem>
               </SelectContent>
             </Select>
-
             {errors.gender && (
               <p className="text-red-500 text-sm">{errors.gender.message}</p>
             )}
           </div>
         </div>
 
-        {/* Add this div to wrap the input fields */}
         <div className="grid grid-cols-2 gap-5">
           <div>
             <label htmlFor="specialization" className="block font-medium">
@@ -168,7 +176,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="specialization"
-              placeholder="Enter specialization"
               {...register("specialization")}
               className="w-full border p-2 rounded"
             />
@@ -185,7 +192,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="licenseNumber"
-              placeholder="Enter license number"
               {...register("licenseNumber")}
               className="w-full border p-2 rounded"
             />
@@ -197,7 +203,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
           </div>
         </div>
 
-        {/* Add this div to wrap the input fields */}
         <div className="grid grid-cols-2 gap-5">
           <div>
             <label htmlFor="nic" className="block font-medium">
@@ -205,7 +210,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="nic"
-              placeholder="Enter NIC number"
               {...register("nic")}
               className="w-full border p-2 rounded"
             />
@@ -220,7 +224,6 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
             </label>
             <Input
               id="phoneNumber"
-              placeholder="Enter phone number"
               {...register("phoneNumber")}
               className="w-full border p-2 rounded"
             />
@@ -232,32 +235,12 @@ const DoctorForm: React.FC<DocterFormProps> = ({ setIsOpen }) => {
           </div>
         </div>
 
-        <div>
-          <label htmlFor="password" className="block font-medium">
-            Password
-          </label>
-          <Input
-            id="password"
-            placeholder="Enter password"
-            type="password"
-            {...register("password")}
-            className="w-full border p-2 rounded"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
-          )}
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full   py-2 "
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Submitting..." : "Create Doctor"}
+        <Button type="submit" className="w-full " disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Update Doctor"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default DoctorForm;
+export default DoctorEditForm;
