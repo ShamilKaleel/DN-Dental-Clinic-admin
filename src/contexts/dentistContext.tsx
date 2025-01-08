@@ -1,7 +1,8 @@
 import { createContext, useReducer, ReactNode } from "react";
 import axiosInstance from "@/api/axiosInstance";
-import { Dentist, CreateDentist } from "@/types/dentist";
-
+import { Dentist, CreateDentist, UpdateDentist } from "@/types/dentist";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 // Actions for Dentist
 type DentistAction =
   | { type: "FETCH_DENTISTS"; payload: Dentist[] }
@@ -50,7 +51,7 @@ export const DentistContext = createContext<{
   dentistState: DentistState;
   fetchDentists: () => Promise<void>;
   createDentist: (dentist: CreateDentist) => Promise<void>;
-  updateDentist: (id: string, dentist: Dentist) => Promise<void>;
+  updateDentist: (id: string, dentist: UpdateDentist) => Promise<void>;
   deleteDentist: (id: string) => Promise<void>;
   getDentistById: (id: string) => Promise<Dentist>;
 } | null>(null);
@@ -58,6 +59,17 @@ export const DentistContext = createContext<{
 // Provider
 export const DentistProvider = ({ children }: { children: ReactNode }) => {
   const [dentistState, dispatch] = useReducer(dentistReducer, initialState);
+
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        await fetchDentists();
+      };
+      fetchData();
+    } catch (error) {
+      console.error("Failed to fetch dentists", error);
+    }
+  }, []);
 
   const fetchDentists = async () => {
     const response = await axiosInstance.get("/dentist/all");
@@ -72,9 +84,9 @@ export const DentistProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CREATE_DENTIST", payload: response.data });
   };
 
-  const updateDentist = async (id: string, dentist: Dentist) => {
+  const updateDentist = async (id: string, dentist: UpdateDentist) => {
     const response = await axiosInstance.put<Dentist>(
-      `/dentist/${id}`,
+      `/dentist/edit/${id}`,
       dentist
     );
     dispatch({ type: "UPDATE_DENTIST", payload: response.data });

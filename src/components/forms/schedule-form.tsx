@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { useSchedules } from "@/hooks/useSchedule";
 import { useToast } from "@/hooks/use-toast";
 import { CreateSchedule } from "@/types/schedule";
+import { Dentist } from "@/types/dentist";
+import { useDentist } from "@/hooks/useDentist";
 
 // Zod schema for validation
 const createScheduleSchema = z.object({
@@ -49,10 +51,8 @@ const createScheduleSchema = z.object({
       /^([0-1]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
       "Invalid time format (HH:MM:SS)"
     ),
-  dentistId: z
-    .number()
-    .min(1, "Dentist ID must be a positive number")
-    .nonnegative("Dentist ID must be valid"),
+
+  dentistId: z.string().min(1, "Dentist ID must be a positive number"),
   capacity: z
     .number()
     .min(1, "Capacity must be a positive number")
@@ -70,6 +70,7 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
   const [date, setDate] = useState<Date | undefined>();
   const { toast } = useToast();
   const { createSchedule } = useSchedules();
+  const { dentistState } = useDentist();
   const {
     register,
     handleSubmit,
@@ -198,22 +199,6 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Dentist ID Field */}
-        <div>
-          <label htmlFor="dentistId" className="block text-sm font-medium">
-            Dentist ID:
-          </label>
-          <Input
-            type="number"
-            id="dentistId"
-            {...register("dentistId", { valueAsNumber: true })}
-            className={`mt-1 block w-full rounded-md  shadow-sm `}
-          />
-          {errors.dentistId && (
-            <p className="text-red-500 text-sm">{errors.dentistId.message}</p>
-          )}
-        </div>
-
         {/* Capacity Field */}
         <div>
           <label htmlFor="capacity" className="block text-sm font-medium">
@@ -227,6 +212,32 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
           />
           {errors.capacity && (
             <p className="text-red-500 text-sm">{errors.capacity.message}</p>
+          )}
+        </div>
+
+        {/* Dentist ID Field */}
+        <div>
+          <label htmlFor="dentistId" className="block text-sm font-medium">
+            Dentist:
+          </label>
+          <Select
+            onValueChange={(value) => {
+              setValue("dentistId", value as any); // Directly update the dentistId form field
+            }}
+          >
+            <SelectTrigger className={`w-[240px] `}>
+              <SelectValue placeholder="Select Doctor" />
+            </SelectTrigger>
+            <SelectContent>
+              {dentistState.dentists.map((dentist: Dentist) => (
+                <SelectItem key={dentist.id} value={dentist.id.toString()}>
+                  dr.{dentist.firstName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.dentistId && (
+            <p className="text-red-500 text-sm">{errors.dentistId.message}</p>
           )}
         </div>
       </div>

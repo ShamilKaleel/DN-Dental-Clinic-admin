@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import AppointmentDeleteForm from "@/components/forms/appointment-delete-form";
-import ScheduleEditForm from "@/components/forms/schedule-edite-form";
+import BookingEditForm from "@/components/forms/appointment-edit-form";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,7 +36,7 @@ export function DataTableRowActions<TData extends WithId<string>>({
         className="sm:max-w-screen-md p-20"
       >
         {/* <EditForm cardId={cardId} setIsOpen={setIsEditOpen} /> */}
-        <ScheduleEditForm cardId={cardId} setIsOpen={setIsEditOpen} />
+        <BookingEditForm cardId={cardId} setIsOpen={setIsEditOpen} />
       </ResponsiveDialog>
       <ResponsiveDialog
         isOpen={isDeleteOpen}

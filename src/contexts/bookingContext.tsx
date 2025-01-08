@@ -7,7 +7,9 @@ import { Booking, CreateBooking } from "@/types/booking";
 type BookingAction =
   | { type: "FETCH_BOOKINGS"; payload: Booking[] }
   | { type: "CREATE_BOOKING"; payload: Booking }
-  | { type: "DELETE_BOOKING"; payload: string };
+  | { type: "DELETE_BOOKING"; payload: string }
+  | { type: "UPDATE_BOOKING"; payload: Booking }
+  | { type: "FETCH_BOOKING"; payload: Booking };
 
 // Booking state interface
 interface BookingState {
@@ -35,6 +37,12 @@ const bookingReducer = (
           (b) => b.referenceId !== action.payload
         ),
       };
+    case "UPDATE_BOOKING":
+      return {
+        bookings: state.bookings.map((b) =>
+          b.referenceId === action.payload.referenceId ? action.payload : b
+        ),
+      };
     default:
       return state;
   }
@@ -46,6 +54,8 @@ export const BookingContext = createContext<{
 
   createBooking: (booking: CreateBooking) => Promise<void>;
   deleteBooking: (id: string) => Promise<void>;
+  updateBooking: (id: string, booking: CreateBooking) => Promise<void>;
+  getBookingById: (id: string) => Promise<Booking>;
 } | null>(null);
 
 export const BookingProvider = ({ children }: { children: ReactNode }) => {
@@ -78,8 +88,26 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "DELETE_BOOKING", payload: id });
   };
 
+  const updateBooking = async (id: string, booking: CreateBooking) => {
+    const response = await axiosInstance.put(`/bookings/${id}`, booking);
+    dispatch({ type: "UPDATE_BOOKING", payload: response.data });
+  };
+
+  const getBookingById = async (id: string) => {
+    const response = await axiosInstance.get<Booking>(`/bookings/${id}`);
+    return response.data;
+  };
+
   return (
-    <BookingContext.Provider value={{ state, createBooking, deleteBooking }}>
+    <BookingContext.Provider
+      value={{
+        state,
+        createBooking,
+        deleteBooking,
+        updateBooking,
+        getBookingById,
+      }}
+    >
       {children}
     </BookingContext.Provider>
   );

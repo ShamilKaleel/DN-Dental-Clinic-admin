@@ -2,8 +2,7 @@ import { useSchedules } from "@/hooks/useSchedule";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Download, Plus } from "lucide-react";
+
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import ScheduleForm from "@/components/forms/schedule-form";
 import { useEffect, useState } from "react";
@@ -48,23 +47,6 @@ export default function SchedulePage() {
             <TabsTrigger value="apoinments">Not ready</TabsTrigger>
           </TabsList>
           <TabsContent value="schedules">
-            <div className="flex justify-between py-5">
-              <h1 className="text-2xl font-bold pl-1">Schedules List </h1>
-              <div className="flex gap-2 md:gap-5">
-                <Button className="btn btn-primary bg-muted" variant="ghost">
-                  <span className="hidden md:block"> Export CSV </span>
-                  <Download className="md:hidden" />
-                </Button>
-                <Button
-                  className="btn btn-primary p-o"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <span className="hidden md:block"> Add Schedule</span>
-                  <Plus className="md:hidden" />
-                </Button>
-              </div>
-            </div>
-
             <DataTable columns={columns} data={state.schedules} />
           </TabsContent>
           <TabsContent value="apoinments">

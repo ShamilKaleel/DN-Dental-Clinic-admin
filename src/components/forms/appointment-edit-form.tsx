@@ -7,9 +7,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Lorder from "@/components/Lorder";
-import { CreateBooking } from "@/types/booking";
 import { useSchedules } from "@/hooks/useSchedule";
-import { SelectSchedule } from "@/types/schedule";
 import {
   Select,
   SelectContent,
@@ -17,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SelectSchedule } from "@/types/schedule";
 
 // Define Zod schema
 const bookingSchema = z.object({
@@ -40,59 +39,75 @@ const bookingSchema = z.object({
 // Infer TypeScript types
 type BookingForm = z.infer<typeof bookingSchema>;
 
-interface BookingFormProps {
+interface BookingEditFormProps {
+  cardId: string;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
-  const { createBooking } = useBooking();
-  const [schedules, setSchedules] = useState<SelectSchedule[] | null>();
-  const [isLoading, setIsLoading] = useState(false);
+const BookingEditForm: React.FC<BookingEditFormProps> = ({
+  cardId,
+  setIsOpen,
+}) => {
+  const { getBookingById, updateBooking } = useBooking();
   const { getAvailableSchedules } = useSchedules();
+  const [schedules, setSchedules] = useState<SelectSchedule[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
-
-    formState: { errors, isSubmitting },
     setValue,
+    formState: { errors, isSubmitting },
   } = useForm<BookingForm>({
     resolver: zodResolver(bookingSchema),
   });
 
   useEffect(() => {
-    setIsLoading(true);
-    try {
-      const fetchData = async () => {
-        const selectSchedules = await getAvailableSchedules();
-        setSchedules(selectSchedules);
-      };
-      fetchData();
-    } catch (error: any) {
-      setIsOpen(false);
-      setIsLoading(false);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: `${error.response?.data?.details.error || error.message}`,
-      });
-    }
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch the booking data by ID
+        const booking = await getBookingById(cardId);
+
+        // Set initial form values
+        setValue("name", booking.name);
+        setValue("nic", booking.nic);
+        setValue("contactNumber", booking.contactNumber);
+        setValue("email", booking.email);
+        setValue("address", booking.address);
+        setValue("scheduleId", booking.scheduleId);
+
+        // Fetch available schedules
+        const availableSchedules = await getAvailableSchedules();
+        setSchedules(availableSchedules);
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Error fetching booking details",
+          description: error.message || "Something went wrong",
+        });
+        setIsOpen(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [cardId, getBookingById, getAvailableSchedules, setIsOpen, setValue]);
 
   const onSubmit: SubmitHandler<BookingForm> = async (data) => {
     try {
-      await createBooking(data as CreateBooking);
+      await updateBooking(cardId, data);
       setIsOpen(false);
       toast({
-        title: "Booking successful",
-        description: "Booking created successfully",
+        title: "Booking updated successfully",
+        description: "Your changes have been saved.",
       });
     } catch (error: any) {
-      console.log(error);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: `${error.response?.data?.details.error || error.message}`,
+        title: "Error updating booking",
+        description: error.message || "Something went wrong",
       });
     }
   };
@@ -110,7 +125,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
           </label>
           <Input
             id="name"
-            placeholder="Enter your name"
             {...register("name")}
             className="mt-1 block w-full border rounded-md p-2"
           />
@@ -125,7 +139,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
           </label>
           <Input
             id="nic"
-            placeholder="Enter your NIC number"
             {...register("nic")}
             className="mt-1 block w-full border rounded-md p-2"
           />
@@ -142,7 +155,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
           </label>
           <Input
             id="contactNumber"
-            placeholder="Enter your contact number"
             {...register("contactNumber")}
             className="mt-1 block w-full border rounded-md p-2"
           />
@@ -158,17 +170,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
             Schedule ID
           </label>
           <Select
-            onValueChange={(value) => {
-              setValue("scheduleId", value as any); // Directly update the dentistId form field
-            }}
+            onValueChange={(value) => setValue("scheduleId", value)}
+            defaultValue={schedules[0]?.id.toString()}
           >
-            <SelectTrigger className={`w-full `}>
-              <SelectValue placeholder="Select Doctor" />
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Schedule" />
             </SelectTrigger>
             <SelectContent>
-              {schedules.map((schedule: SelectSchedule) => (
+              {schedules.map((schedule) => (
                 <SelectItem key={schedule.id} value={schedule.id.toString()}>
-                  {schedule.date} - {schedule.dayOfWeek} - {schedule.startTime}{" "}
+                  {schedule.date} - {schedule.dayOfWeek} - {schedule.startTime}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -185,7 +196,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
         </label>
         <Input
           id="email"
-          placeholder="Enter your email"
           {...register("email")}
           className="mt-1 block w-full border rounded-md p-2"
         />
@@ -193,13 +203,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
       </div>
-      <div className="mb-4">
+
+      <div>
         <label htmlFor="address" className="block text-sm font-medium">
           Address
         </label>
         <Input
           id="address"
-          placeholder="Enter your address"
           {...register("address")}
           className="mt-1 block w-full border rounded-md p-2"
         />
@@ -209,23 +219,15 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
       </div>
 
       <div className="flex justify-center gap-5 pt-5 relative">
-        <Button
-          className="bg-muted  px-8"
-          onClick={() => setIsOpen(false)}
-          variant={"ghost"}
-        >
+        <Button onClick={() => setIsOpen(false)} variant="ghost">
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting} className="px-8">
-          {isSubmitting ? <Lorder /> : "Submit"}{" "}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? <Lorder /> : "Update"}
         </Button>
-
-        <p className=" text-center text-red-500  pl-1 absolute top-32 left-0 right-0">
-          {errors.root?.message}
-        </p>
       </div>
     </form>
   );
 };
 
-export default BookingForm;
+export default BookingEditForm;

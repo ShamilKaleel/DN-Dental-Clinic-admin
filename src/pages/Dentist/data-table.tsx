@@ -25,6 +25,7 @@ import {
 
 import PaginationArea from "./data-table-pagination-area";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableHeader } from "./data-table-header";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4 flex w-full flex-col ">
+      <DataTableHeader table={table} />
       <DataTableToolbar table={table} />
       <div className="overflow-y-auto rounded-md border">
         <Table>

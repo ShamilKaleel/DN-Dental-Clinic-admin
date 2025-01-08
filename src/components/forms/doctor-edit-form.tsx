@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDentist } from "@/hooks/useDentist";
 import { useToast } from "@/hooks/use-toast";
 import Lorder from "@/components/Lorder";
-import { Dentist } from "@/types/dentist";
+import { Dentist, UpdateDentist } from "@/types/dentist";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -82,7 +82,7 @@ const DoctorEditForm: React.FC<EditDoctorFormProps> = ({
 
   const onSubmit = async (data: DoctorEditFormInputs) => {
     try {
-      await updateDentist(cardId, data as Dentist);
+      await updateDentist(cardId, data as UpdateDentist);
 
       toast({
         title: "Doctor Updated",

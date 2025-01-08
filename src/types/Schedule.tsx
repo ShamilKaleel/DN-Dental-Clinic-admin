@@ -10,9 +10,10 @@ export interface Schedule {
   startTime: string;
   endTime: string;
   duration: number;
-  dentistId: number;
+  dentistId: string;
   createdAt: string;
   capacity: number;
+  availableSlots: number;
 }
 
 // Create Schedule interface
@@ -21,6 +22,13 @@ export interface CreateSchedule {
   status: "AVAILABLE" | "UNAVAILABLE" | "FULL";
   startTime: string;
   endTime: string;
-  dentistId: number;
+  dentistId: string;
   capacity: number;
+}
+
+export interface SelectSchedule {
+  id: number;
+  date: string;
+  dayOfWeek: string;
+  startTime: string;
 }

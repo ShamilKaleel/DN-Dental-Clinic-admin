@@ -5,7 +5,7 @@ export interface Booking {
   contactNumber: string;
   email: string;
   address: string;
-  scheduleId: number;
+  scheduleId: string;
   status: "PENDING" | "ACTIVE" | "CANCEL" | "ABSENT" | "FINISHED";
   date: string;
   dayofweek: string;
@@ -18,5 +18,5 @@ export interface CreateBooking {
   contactNumber: string;
   email: string;
   address: string;
-  scheduleId: number;
+  scheduleId: string;
 }

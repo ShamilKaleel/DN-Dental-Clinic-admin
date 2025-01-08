@@ -9,7 +9,6 @@ import BookingForm from "@/components/forms/appointment-form";
 import { useState } from "react";
 export default function BookingPage() {
   const { state } = useBooking();
-  const [isOpen, setIsOpen] = useState(false);
 
   if (!state)
     return (
@@ -21,14 +20,6 @@ export default function BookingPage() {
     );
   return (
     <div className="flex flex-col">
-      <ResponsiveDialog
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        title="Add Appointment"
-        className="sm:max-w-screen-md p-20"
-      >
-        <BookingForm setIsOpen={setIsOpen} />
-      </ResponsiveDialog>
       <div className="pb-5 px-2 lg:px-0">
         <Tabs defaultValue="apoinments">
           <TabsList className=" ">
@@ -39,23 +30,6 @@ export default function BookingPage() {
             <div>hi</div>
           </TabsContent>
           <TabsContent value="apoinments">
-            <div className="flex justify-between py-5">
-              <h1 className="text-2xl font-bold pl-1">Appointment List </h1>
-              <div className="flex gap-2 md:gap-5">
-                <Button className="btn btn-primary bg-muted" variant="ghost">
-                  <span className="hidden md:block"> Export CSV</span>
-                  <Download className="md:hidden" />
-                </Button>
-                <Button
-                  className="btn btn-primary p-o"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <span className="hidden md:block"> Add Appointment</span>
-                  <Plus className="md:hidden" />
-                </Button>
-              </div>
-            </div>
-
             <DataTable columns={columns} data={state.bookings} />
           </TabsContent>
         </Tabs>

@@ -1,6 +1,6 @@
 import { createContext, useReducer, ReactNode } from "react";
 import axiosInstance from "@/api/axiosInstance";
-import { Schedule, CreateSchedule } from "@/types/schedule";
+import { Schedule, CreateSchedule, SelectSchedule } from "@/types/schedule";
 
 // Schedule interface
 
@@ -54,6 +54,7 @@ export const ScheduleContext = createContext<{
   deleteSchedule: (id: string) => Promise<void>;
   updateSchedule: (id: string, schedule: CreateSchedule) => Promise<void>;
   getSchedule: (id: string) => Promise<Schedule>;
+  getAvailableSchedules: () => Promise<SelectSchedule[]>;
 } | null>(null);
 
 // Provider
@@ -92,6 +93,13 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     return response.data;
   };
 
+  const getAvailableSchedules = async () => {
+    const response = await axiosInstance.get<SelectSchedule[]>(
+      `/schedules/getSevenCustom`
+    );
+    return response.data;
+  };
+
   return (
     <ScheduleContext.Provider
       value={{
@@ -101,6 +109,7 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
         fetchSchedules,
         updateSchedule,
         getSchedule,
+        getAvailableSchedules,
       }}
     >
       {children}

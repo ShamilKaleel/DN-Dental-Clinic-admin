@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import DocterDeleteForm from "@/components/forms/docter-delete-form";
-import DoctorEditForm from "@/components/forms/docter-edit-form";
+import DoctorEditForm from "@/components/forms/doctor-edit-form";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import {

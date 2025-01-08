@@ -23,3 +23,14 @@ export interface CreateDentist {
   phoneNumber: string;
   password: string;
 }
+
+export interface UpdateDentist {
+  userName: string;
+  email: string;
+  gender: "Male" | "Female";
+  firstName: string;
+  specialization: string;
+  licenseNumber: string;
+  nic: string;
+  phoneNumber: string;
+}
