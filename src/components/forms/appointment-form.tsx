@@ -65,6 +65,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
     try {
       const fetchData = async () => {
         const selectSchedules = await getAvailableSchedules();
+
         setSchedules(selectSchedules);
       };
       fetchData();
@@ -98,7 +99,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
   };
 
   if (!schedules) {
-    return <Lorder />;
+    return (
+      <div className="w-full">
+        <p className=" text-red-500">No Schedules for Booking</p>
+      </div>
+    );
   }
 
   return (

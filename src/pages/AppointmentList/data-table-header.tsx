@@ -23,7 +23,7 @@ export function DataTableHeader<TData>({
       dataToExport,
       "Bookings",
       columnHeadersBooking,
-      [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+      Array(columnHeadersBooking.length).fill(20)
     );
   };
   return (

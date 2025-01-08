@@ -21,9 +21,9 @@ export function DataTableHeader<TData>({
       .rows.map((row: any) => row.original);
     exportToExcel(
       dataToExport,
-      "Doctors",
+      "Schedule",
       columnHeadersSchedule,
-      [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+      Array(columnHeadersSchedule.length).fill(20)
     );
   };
   return (

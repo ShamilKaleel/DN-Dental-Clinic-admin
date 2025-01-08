@@ -48,12 +48,18 @@ const navLinks = [
 
 const columnHeadersBooking = [
   "Reference Id",
+  "Appointment Number",
   "Name",
   "NIC",
   "Contact Number",
   "Email",
   "Address",
   "ScheduleId",
+  "scheduleDate",
+  "scheduleDayOfWeek",
+  "scheduleStatus",
+  "scheduleStartTime",
+  "doctorName",
   "Status",
   "Date",
   "Day Of Week",
@@ -73,8 +79,6 @@ const columnHeadersDoctor = [
   "Roles",
 ];
 
-
-
 const columnHeadersSchedule = [
   "Id",
   "Date",
@@ -87,6 +91,12 @@ const columnHeadersSchedule = [
   "Duration",
   "Dentist Id",
   "Capacity",
+  "Available Slots",
   "Created At",
 ];
-export { navLinks, columnHeadersBooking, columnHeadersDoctor,columnHeadersSchedule };
+export {
+  navLinks,
+  columnHeadersBooking,
+  columnHeadersDoctor,
+  columnHeadersSchedule,
+};

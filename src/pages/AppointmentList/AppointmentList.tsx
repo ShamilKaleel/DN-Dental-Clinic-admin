@@ -2,11 +2,7 @@ import { useBooking } from "@/hooks/useBooking";
 import { DataTable } from "@/pages/AppointmentList/data-table";
 import { columns } from "@/pages/AppointmentList/columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Download, Plus } from "lucide-react";
-import { ResponsiveDialog } from "@/components/responsive-dialog";
-import BookingForm from "@/components/forms/appointment-form";
-import { useState } from "react";
+
 export default function BookingPage() {
   const { state } = useBooking();
 

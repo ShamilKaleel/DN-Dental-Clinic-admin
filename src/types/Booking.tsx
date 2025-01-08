@@ -10,6 +10,8 @@ export interface Booking {
   date: string;
   dayofweek: string;
   createdAt: string;
+  scheduleDate: string;
+  doctorName: string;
 }
 
 export interface CreateBooking {

@@ -11,7 +11,7 @@ export const columns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("id")}</div>
+      <div className="w-[50px] capitalize">{row.getValue("id")}</div>
     ),
   },
   {
@@ -20,34 +20,30 @@ export const columns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("date")}</div>
+      <div className="w-[80px] capitalize">{row.getValue("date")}</div>
     ),
   },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
-  },
+
   {
     accessorKey: "numberOfBookings",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Booking count" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">
+      <div className="w-[30px] text-center capitalize">
         {row.getValue("numberOfBookings")}
       </div>
     ),
   },
   {
-    accessorKey: "capacity",
+    accessorKey: "availableSlots",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Capacity" />
+      <DataTableColumnHeader column={column} title="AvailableSlots" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("capacity")}</div>
+      <div className="w-[30px] text-center capitalize">
+        {row.getValue("availableSlots")}
+      </div>
     ),
   },
   {
@@ -56,7 +52,7 @@ export const columns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Start Time" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("startTime")}</div>
+      <div className="w-[80px] capitalize">{row.getValue("startTime")}</div>
     ),
   },
   {
@@ -65,7 +61,7 @@ export const columns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="End Time" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("endTime")}</div>
+      <div className="w-[80px] capitalize">{row.getValue("endTime")}</div>
     ),
   },
 
@@ -75,8 +71,17 @@ export const columns: ColumnDef<Schedule>[] = [
       <DataTableColumnHeader column={column} title="Dentist ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[100px] capitalize">{row.getValue("dentistId")}</div>
+      <div className="w-[30px] text-center capitalize">
+        {row.getValue("dentistId")}
+      </div>
     ),
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
   },
 
   {

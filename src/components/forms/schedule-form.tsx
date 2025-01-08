@@ -98,6 +98,14 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
     }
   };
 
+  if (!dentistState.dentists) {
+    return (
+      <div className="w-full">
+        <p className=" text-red-500">No Doctors</p>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-5 md:px-0">
       {/* Date Field */}

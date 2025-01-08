@@ -14,7 +14,7 @@ export const columns: ColumnDef<Booking>[] = [
     enableHiding: false,
 
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("referenceId")}</div>
+      <div className="w-[80px] capitalize ">{row.getValue("referenceId")}</div>
     ),
   },
 
@@ -24,27 +24,39 @@ export const columns: ColumnDef<Booking>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("name")}</div>
+      <div className="w-[140px]  capitalize">{row.getValue("name")}</div>
     ),
   },
-  {
-    accessorKey: "nic",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="NIC" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[150px] capitalize">{row.getValue("nic")}</div>
-    ),
-  },
+
   {
     accessorKey: "contactNumber",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Contact Number" />
     ),
     cell: ({ row }) => (
-      <div className="w-[150px] capitalize">
+      <div className="w-[90px]  capitalize">
         {row.getValue("contactNumber")}
       </div>
+    ),
+  },
+  {
+    accessorKey: "scheduleDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Schedule Date" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[100px] capitalize ">
+        {row.getValue("scheduleDate")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "doctorName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Doctor Name" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[100px] capitalize ">{row.getValue("doctorName")}</div>
     ),
   },
   {
@@ -53,15 +65,6 @@ export const columns: ColumnDef<Booking>[] = [
       <DataTableColumnHeader column={column} title="status" />
     ),
     cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" className="" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[170px] ">{row.getValue("email")}</div>
-    ),
   },
 
   {
