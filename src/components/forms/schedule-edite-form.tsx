@@ -33,7 +33,15 @@ const editScheduleSchema = z.object({
     .nonempty("Date is required")
     .refine((val) => !isNaN(Date.parse(val)), "Invalid date format"),
   status: z.enum(
-    ["AVAILABLE", "UNAVAILABLE", "FULL", "CANCELLED", "FINISHED"],
+    [
+      "AVAILABLE",
+      "UNAVAILABLE",
+      "FULL",
+      "CANCELLED",
+      "FINISHED",
+      "ACTIVE",
+      "ON_GOING",
+    ],
     {
       errorMap: () => ({
         message: "Status must be AVAILABLE, UNAVAILABLE, or FULL",
@@ -194,6 +202,7 @@ const ScheduleEditForm: React.FC<EditScheduleFormProps> = ({
           <SelectContent>
             <SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
             <SelectItem value="UNAVAILABLE">UNAVAILABLE</SelectItem>
+            <SelectItem value="ACTIVE">ACTIVE</SelectItem>
             <SelectItem value="FULL">FULL</SelectItem>
             <SelectItem value="CANCELLED">CANCELLED</SelectItem>
             <SelectItem value="FINISHED">FINISHED</SelectItem>

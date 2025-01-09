@@ -12,6 +12,8 @@ const StatusBar: React.FC<StatusProps> = ({ status }) => {
     CANCELLED: "text-gray-900 bg-gray-300 border-gray-500",
     UNAVAILABLE: "text-red-900 bg-red-200 border-red-500",
     FINISHED: "text-green-900 bg-green-200 border-green-500",
+    ON_GOING: "text-blue-900 bg-blue-200 border-blue-500",
+    ACTIVE: "text-blue-500 bg-blue-200 border-blue-500",
   };
 
   return (

@@ -4,7 +4,7 @@ import { Table } from "@tanstack/react-table";
 import { exportToExcel } from "@/lib/export-to-excel";
 import { useState } from "react";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import ScheduleForm from "@/components/forms/schedule-form";
+import PatientForm from "@/components/forms/patient-form";
 import { columnHeadersSchedule } from "@/constant/index";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -31,10 +31,10 @@ export function DataTableHeader<TData>({
       <ResponsiveDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        title="Add Schedule"
+        title="Add Patient"
         className="sm:max-w-screen-md p-20"
       >
-        <ScheduleForm setIsOpen={setIsOpen} />
+        <PatientForm setIsOpen={setIsOpen} />
       </ResponsiveDialog>
       <h1 className="text-2xl font-bold pl-1">Schedule List</h1>
       <div className="flex gap-2 md:gap-5">

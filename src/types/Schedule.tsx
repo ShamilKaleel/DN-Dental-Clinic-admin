@@ -4,7 +4,14 @@ export interface Schedule {
   id: string;
   date: string;
   dayOfWeek: string;
-  status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
+  status:
+    | "AVAILABLE"
+    | "UNAVAILABLE"
+    | "CANCELLED"
+    | "FULL"
+    | "FINISHED"
+    | "ACTIVE"
+    | "ON_GOING";
   numberOfBookings: number;
   bookings: Booking[];
   startTime: string;

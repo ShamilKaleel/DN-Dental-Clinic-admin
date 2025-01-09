@@ -23,7 +23,7 @@ export function DataTableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   // State to manage selected column for filtering
-  const [selectedColumn, setSelectedColumn] = useState<string>("email");
+  const [selectedColumn, setSelectedColumn] = useState<string>("name");
 
   return (
     <div className="flex  items-center justify-between">

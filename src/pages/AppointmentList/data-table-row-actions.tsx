@@ -32,7 +32,7 @@ export function DataTableRowActions<TData extends WithId<string>>({
       <ResponsiveDialog
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-        title="Edit Person"
+        title="Edit Appointment"
         className="sm:max-w-screen-md p-20"
       >
         {/* <EditForm cardId={cardId} setIsOpen={setIsEditOpen} /> */}

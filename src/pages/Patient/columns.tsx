@@ -1,10 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
-import StatusBar from "./data-table-status-bar";
-import { DataTableRowActions } from "./data-table-row-actions";
-import { Schedule } from "@/types/schedule";
 
-export const columns: ColumnDef<Schedule>[] = [
+import { DataTableRowActions } from "./data-table-row-actions";
+import { Patient } from "@/types/patient";
+
+export const columns: ColumnDef<Patient>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -15,74 +15,61 @@ export const columns: ColumnDef<Schedule>[] = [
     ),
   },
   {
-    accessorKey: "date",
+    accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px] capitalize">{row.getValue("date")}</div>
+      <div className="w-[80px] capitalize">{row.getValue("name")}</div>
     ),
   },
 
   {
-    accessorKey: "numberOfBookings",
+    accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Booking count" />
+      <DataTableColumnHeader column={column} title="email" />
     ),
     cell: ({ row }) => (
       <div className="w-[30px] text-center capitalize">
-        {row.getValue("numberOfBookings")}
+        {row.getValue("email")}
       </div>
     ),
   },
   {
-    accessorKey: "availableSlots",
+    accessorKey: "nic",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="AvailableSlots" />
+      <DataTableColumnHeader column={column} title="nic" />
     ),
     cell: ({ row }) => (
       <div className="w-[30px] text-center capitalize">
-        {row.getValue("availableSlots")}
+        {row.getValue("nic")}
       </div>
     ),
   },
   {
-    accessorKey: "startTime",
+    accessorKey: "contactNumbers",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Start Time" />
+      <DataTableColumnHeader column={column} title="Contact Number" />
     ),
-    cell: ({ row }) => (
-      <div className="w-[80px] capitalize">{row.getValue("startTime")}</div>
-    ),
+    cell: ({ row }) => {
+      const contactNumbers = row.getValue<string[]>("contactNumbers");
+      // Display the first contact number or a placeholder if empty
+      return (
+        <div className="w-[80px] capitalize">
+          {contactNumbers?.[0] || "N/A"}
+        </div>
+      );
+    },
   },
-  {
-    accessorKey: "endTime",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="End Time" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[80px] capitalize">{row.getValue("endTime")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "dentistId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Dentist ID" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-[30px] text-center capitalize">
-        {row.getValue("dentistId")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
-  },
+  // {
+  //   accessorKey: "logs",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="End Time" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <div className="w-[80px] capitalize">{row.getValue("logs")}</div>
+  //   ),
+  // },
 
   {
     id: "actions",

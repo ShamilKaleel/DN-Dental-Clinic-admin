@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ScheduleDeleteForm from "@/components/forms/schedule-delete-form";
+import PatientDeleteForm from "@/components/forms/patient-delete-form";
 import ScheduleEditForm from "@/components/forms/schedule-edite-form";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
@@ -41,10 +41,10 @@ export function DataTableRowActions<TData extends WithId<string>>({
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Schedule"
-        description="Are you sure you want to delete this Schedule?"
+        title="Delete Patient"
+        description="Are you sure you want to delete this Patient?"
       >
-        <ScheduleDeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
+        <PatientDeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
       </ResponsiveDialog>
 
       <DropdownMenu>
