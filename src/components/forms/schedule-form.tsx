@@ -98,7 +98,7 @@ const CreateScheduleForm: React.FC<ScheduleFormProps> = ({ setIsOpen }) => {
     }
   };
 
-  if (!dentistState.dentists) {
+  if (dentistState.dentists.length === 0) {
     return (
       <div className="w-full">
         <p className=" text-red-500">No Doctors</p>
