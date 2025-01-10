@@ -7,7 +7,7 @@ import { ResponsiveDialog } from "@/components/responsive-dialog";
 import ScheduleForm from "@/components/forms/schedule-form";
 import { useEffect, useState } from "react";
 export default function SchedulePage() {
-  const { state, fetchSchedules } = useSchedules();
+  const { scheduleState, fetchSchedules } = useSchedules();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function SchedulePage() {
             <TabsTrigger value="apoinments">Not ready</TabsTrigger>
           </TabsList>
           <TabsContent value="schedules">
-            <DataTable columns={columns} data={state.schedules} />
+            <DataTable columns={columns} data={scheduleState.schedules} />
           </TabsContent>
           <TabsContent value="apoinments">
             <div>hi</div>

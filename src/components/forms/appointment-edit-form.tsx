@@ -113,7 +113,11 @@ const BookingEditForm: React.FC<BookingEditFormProps> = ({
   };
 
   if (!schedules) {
-    return <Lorder />;
+    return (
+      <div className="w-full">
+        <p className=" text-red-500">No Schedules</p>
+      </div>
+    );
   }
 
   return (

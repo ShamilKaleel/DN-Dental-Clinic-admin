@@ -23,32 +23,32 @@ const initialState: ScheduleState = {
 
 // Reducer
 const scheduleReducer = (
-  state: ScheduleState,
+  _state: ScheduleState,
   action: ScheduleAction
 ): ScheduleState => {
   switch (action.type) {
     case "FETCH_SCHEDULES":
       return { schedules: action.payload };
     case "CREATE_SCHEDULE":
-      return { schedules: [...state.schedules, action.payload] };
+      return { schedules: [..._state.schedules, action.payload] };
     case "DELETE_SCHEDULE":
       return {
-        schedules: state.schedules.filter((s) => s.id !== action.payload),
+        schedules: _state.schedules.filter((s) => s.id !== action.payload),
       };
     case "UPDATE_SCHEDULE":
       return {
-        schedules: state.schedules.map((s) =>
+        schedules: _state.schedules.map((s) =>
           s.id === action.payload.id ? action.payload : s
         ),
       };
     default:
-      return state;
+      return _state;
   }
 };
 
 // Context
 export const ScheduleContext = createContext<{
-  state: ScheduleState;
+  scheduleState: ScheduleState;
   fetchSchedules: () => Promise<void>;
   createSchedule: (schedule: CreateSchedule) => Promise<void>;
   deleteSchedule: (id: string) => Promise<void>;
@@ -59,7 +59,7 @@ export const ScheduleContext = createContext<{
 
 // Provider
 export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(scheduleReducer, initialState);
+  const [scheduleState, dispatch] = useReducer(scheduleReducer, initialState);
 
   const fetchSchedules = async () => {
     try {
@@ -103,7 +103,7 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ScheduleContext.Provider
       value={{
-        state,
+        scheduleState,
         createSchedule,
         deleteSchedule,
         fetchSchedules,
