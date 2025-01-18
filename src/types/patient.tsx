@@ -16,7 +16,6 @@ export interface CreatePatient {
   contactNumbers: string[];
 }
 export interface UpdatePatient {
-  id: string;
   name: string;
   email: string;
   nic: string;

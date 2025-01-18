@@ -9,7 +9,8 @@ type ScheduleAction =
   | { type: "FETCH_SCHEDULES"; payload: Schedule[] }
   | { type: "CREATE_SCHEDULE"; payload: Schedule }
   | { type: "DELETE_SCHEDULE"; payload: string }
-  | { type: "UPDATE_SCHEDULE"; payload: Schedule };
+  | { type: "UPDATE_SCHEDULE"; payload: Schedule }
+  | { type: "UPDATE_SCHEDULE_STATUS"; payload: Schedule };
 
 // Schedule state interface
 interface ScheduleState {
@@ -41,6 +42,13 @@ const scheduleReducer = (
           s.id === action.payload.id ? action.payload : s
         ),
       };
+    case "UPDATE_SCHEDULE_STATUS":
+      return {
+        schedules: _state.schedules.map((s) =>
+          s.id === action.payload.id ? action.payload : s
+        ),
+      };
+
     default:
       return _state;
   }
@@ -55,6 +63,7 @@ export const ScheduleContext = createContext<{
   updateSchedule: (id: string, schedule: CreateSchedule) => Promise<void>;
   getSchedule: (id: string) => Promise<Schedule>;
   getAvailableSchedules: () => Promise<SelectSchedule[]>;
+  updateScheduleStatus: (id: string, status: string) => Promise<void>;
 } | null>(null);
 
 // Provider
@@ -100,6 +109,16 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
     return response.data;
   };
 
+  const updateScheduleStatus = async (id: string, status: string) => {
+    const response = await axiosInstance.put(
+      `/schedules/updateStatus/${id}?status=${status}`
+    );
+    dispatch({
+      type: "UPDATE_SCHEDULE_STATUS",
+      payload: response.data,
+    });
+  };
+
   return (
     <ScheduleContext.Provider
       value={{
@@ -110,6 +129,7 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
         updateSchedule,
         getSchedule,
         getAvailableSchedules,
+        updateScheduleStatus,
       }}
     >
       {children}

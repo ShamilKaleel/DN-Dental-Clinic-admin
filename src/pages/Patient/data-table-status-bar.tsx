@@ -1,4 +1,13 @@
 import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, SquarePen, Trash2, Copy } from "lucide-react";
 
 type StatusProps = {
   status: "AVAILABLE" | "UNAVAILABLE" | "CANCELLED" | "FULL" | "FINISHED";
@@ -15,11 +24,45 @@ const StatusBar: React.FC<StatusProps> = ({ status }) => {
   };
 
   return (
-    <div
-      className={` w-[85px]  text-center  py-1 border font-semibold rounded-lg text-xs ${statusStyles[status]}`}
-    >
-      {status}
-    </div>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className={` w-[85px]  text-center  py-1 border font-semibold rounded-lg text-xs ${statusStyles[status]}`}
+          >
+            {status}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px] z-50">
+          <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base  ">
+            <button
+              onClick={() => {}}
+              className="w-full justify-start flex rounded-md p-2 transition-all duration-75 "
+            >
+              <SquarePen className="h-4 w-4 mr-2" />
+              Edit
+            </button>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base  ">
+            <button className="w-full justify-start flex rounded-md p-2 transition-all duration-75 ">
+              <Copy className="h-4 w-4 mr-2" />
+              Copy ID
+            </button>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base ">
+            <button
+              onClick={() => {}}
+              className="w-full justify-start flex text-red-500 rounded-md p-2 transition-all duration-75 "
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 

@@ -107,7 +107,8 @@ const BookingEditForm: React.FC<BookingEditFormProps> = ({
       toast({
         variant: "destructive",
         title: "Error updating booking",
-        description: error.message || "Something went wrong",
+        description:
+          error.response?.data?.details?.error || "Something went wrong",
       });
     }
   };

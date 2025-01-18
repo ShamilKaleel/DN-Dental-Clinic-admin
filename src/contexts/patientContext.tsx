@@ -86,7 +86,7 @@ export const PatientProvider = ({ children }: { children: ReactNode }) => {
 
   const updatePatient = async (id: string, patient: UpdatePatient) => {
     const response = await axiosInstance.put<Patient>(
-      `/patient/edit/${id}`,
+      `/patients/${id}`,
       patient
     );
     dispatch({ type: "UPDATE_PATIENT", payload: response.data });

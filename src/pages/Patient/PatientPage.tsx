@@ -43,7 +43,7 @@ export default function PatientPage() {
       <div className="pb-5 px-2 lg:px-0">
         <Tabs defaultValue="schedules">
           <TabsList className=" ">
-            <TabsTrigger value="schedules">Schedules </TabsTrigger>
+            <TabsTrigger value="schedules">Patient </TabsTrigger>
             <TabsTrigger value="apoinments">Not ready</TabsTrigger>
           </TabsList>
           <TabsContent value="schedules">

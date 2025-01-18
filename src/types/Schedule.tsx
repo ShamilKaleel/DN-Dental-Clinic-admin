@@ -34,7 +34,7 @@ export interface CreateSchedule {
 }
 
 export interface SelectSchedule {
-  id: number;
+  id: string;
   date: string;
   dayOfWeek: string;
   startTime: string;

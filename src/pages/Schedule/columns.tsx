@@ -81,7 +81,9 @@ export const columns: ColumnDef<Schedule>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
-    cell: ({ row }) => <StatusBar status={row.getValue("status")} />,
+    cell: ({ row }) => (
+      <StatusBar status={row.getValue("status")} cardId={row.original.id} />
+    ),
   },
 
   {

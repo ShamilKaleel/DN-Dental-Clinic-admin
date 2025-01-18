@@ -11,7 +11,7 @@ export const columns: ColumnDef<Patient>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[50px] capitalize">{row.getValue("id")}</div>
+      <div className="w-[20px] capitalize ">{row.getValue("id")}</div>
     ),
   },
   {
@@ -20,7 +20,9 @@ export const columns: ColumnDef<Patient>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px] capitalize">{row.getValue("name")}</div>
+      <div className=" lg:max-w-fit capitalize w-[150px]">
+        {row.getValue("name")}
+      </div>
     ),
   },
 
@@ -30,9 +32,7 @@ export const columns: ColumnDef<Patient>[] = [
       <DataTableColumnHeader column={column} title="email" />
     ),
     cell: ({ row }) => (
-      <div className="w-[30px] text-center capitalize">
-        {row.getValue("email")}
-      </div>
+      <div className="max-w-fit text-center  ">{row.getValue("email")}</div>
     ),
   },
   {
@@ -41,7 +41,7 @@ export const columns: ColumnDef<Patient>[] = [
       <DataTableColumnHeader column={column} title="nic" />
     ),
     cell: ({ row }) => (
-      <div className="w-[30px] text-center capitalize">
+      <div className="w-[100px] text-center capitalize">
         {row.getValue("nic")}
       </div>
     ),
@@ -61,16 +61,6 @@ export const columns: ColumnDef<Patient>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "logs",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="End Time" />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <div className="w-[80px] capitalize">{row.getValue("logs")}</div>
-  //   ),
-  // },
-
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

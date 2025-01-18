@@ -21,7 +21,7 @@ export function DataTableHeader<TData>({
       .rows.map((row: any) => row.original);
     exportToExcel(
       dataToExport,
-      "Schedule",
+      "Patient",
       columnHeadersSchedule,
       Array(columnHeadersSchedule.length).fill(20)
     );
@@ -36,7 +36,7 @@ export function DataTableHeader<TData>({
       >
         <PatientForm setIsOpen={setIsOpen} />
       </ResponsiveDialog>
-      <h1 className="text-2xl font-bold pl-1">Schedule List</h1>
+      <h1 className="text-2xl font-bold pl-1">Patient List</h1>
       <div className="flex gap-2 md:gap-5">
         <Button
           className="btn btn-primary bg-muted"
@@ -47,7 +47,7 @@ export function DataTableHeader<TData>({
           <Plus className="md:hidden" />
         </Button>
         <Button className="btn btn-primary p-o" onClick={() => setIsOpen(true)}>
-          <span className="hidden md:block"> Add Schedule</span>
+          <span className="hidden md:block"> Add Patient</span>
           <Plus className="md:hidden" />
         </Button>
       </div>

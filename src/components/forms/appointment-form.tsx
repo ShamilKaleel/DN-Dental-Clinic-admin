@@ -98,13 +98,14 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
     }
   };
 
-  if (!schedules) {
+  if (schedules?.length === 0) {
     return (
       <div className="w-full">
         <p className=" text-red-500">No Schedules for Booking</p>
       </div>
     );
   }
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-5 md:px-0">
@@ -171,8 +172,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ setIsOpen }) => {
               <SelectValue placeholder="Select Doctor" />
             </SelectTrigger>
             <SelectContent>
-              {schedules.map((schedule: SelectSchedule) => (
-                <SelectItem key={schedule.id} value={schedule.id.toString()}>
+              {schedules?.map((schedule: SelectSchedule, index) => (
+                <SelectItem key={index} value={schedule.id.toString()}>
                   {schedule.date} - {schedule.dayOfWeek} - {schedule.startTime}{" "}
                 </SelectItem>
               ))}
