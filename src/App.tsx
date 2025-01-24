@@ -21,6 +21,7 @@ import { Toaster } from "@/components/ui/toaster";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import Layout from "./Layout";
 import FeedbackPage from "@/pages/Feedback/FeedbackPage";
+import ContactUsPage from "@/pages/ContactUs/ContactUsPage";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/appointment-list" element={<AppointmentListPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/contact-us" element={<ContactUsPage />} />
         </Route>
 
         {/* Public Routes only for testiong */}

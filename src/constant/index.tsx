@@ -6,6 +6,8 @@ import {
   Calendar,
   ClipboardList,
   Stethoscope,
+  NotebookPen,
+  BookUser,
 } from "lucide-react";
 
 const navLinks = [
@@ -43,6 +45,16 @@ const navLinks = [
     title: "Appointment List",
     path: "/appointment-list",
     icon: <ClipboardList size={20} />,
+  },
+  {
+    title: "Feedback",
+    path: "/feedback",
+    icon: <NotebookPen size={20} />,
+  },
+  {
+    title: "Contact Us",
+    path: "/contact-us",
+    icon: <BookUser size={20} />,
   },
 ];
 
