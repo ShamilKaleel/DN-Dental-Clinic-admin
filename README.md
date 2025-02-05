@@ -1,50 +1,57 @@
-# React + TypeScript + Vite
+# Dental Clinic Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a comprehensive **Dental Clinic Management System** designed to streamline the appointment booking and management process for both patients and administrators. The system includes separate repositories for the **backend** and **user frontend**, offering a smooth experience for clinic operations and patient interactions.
 
-Currently, two official plugins are available:
+## Repositories
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. **Backend Repository**
 
-## Expanding the ESLint configuration
+- **Description**:  
+  The backend is built with **Spring Boot** and handles all the core functionalities such as user authentication, appointment scheduling, feedback management, and secure API handling using **Spring Security** with **JWT**.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Key Features**:
+  - User Authentication (Login, Signup)  
+  - Appointment Booking & Management  
+  - Feedback and Contact Form Handling  
+  - Secure API Endpoints with JWT  
+  - Data Management using **MySQL**
 
-- Configure the top-level `parserOptions` property like this:
+- **Technologies Used**:
+  - Spring Boot  
+  - Spring Security with JWT  
+  - MySQL  
+  - RESTful APIs  
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Repository Link**: [Backend Repo](#) *(Insert your backend repo link here)*
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 2. **User Frontend Repository**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- **Description**:  
+  The user-facing frontend is developed using **React** with **TypeScript** and styled with **Tailwind CSS**. It provides a seamless interface for patients to book appointments, view schedules, and contact the clinic.
+
+- **Key Features**:
+  - User-Friendly Booking Form with Validation  
+  - Appointment Schedule Viewer  
+  - Contact and Feedback Forms  
+  - Responsive Design for All Devices  
+  - API Integration using **Axios**
+
+- **Technologies Used**:
+  - React with TypeScript  
+  - Tailwind CSS  
+  - Axios for API Requests  
+  - TanStack Table for Dynamic Data Handling  
+
+- **Repository Link**: [User Frontend Repo](#) *(Insert your user frontend repo link here)*
+
+---
+
+## Setup Instructions
+
+### Backend Setup:
+1. Clone the repository:
+   ```bash
+   git clone <backend-repo-link>
+   ```
