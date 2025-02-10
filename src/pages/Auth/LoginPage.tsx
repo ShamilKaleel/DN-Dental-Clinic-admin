@@ -21,7 +21,7 @@ const schema = z.object({
 // Infer the form values' types from the schema
 type FormValues = z.infer<typeof schema>;
 
-export default function LoginPage() {
+export default function LoginForm() {
   // Get the login function from the AuthContext
   const { login } = useAuth();
   const { toast } = useToast();
