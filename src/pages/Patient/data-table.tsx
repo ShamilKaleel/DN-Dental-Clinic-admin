@@ -26,6 +26,8 @@ import {
 import PaginationArea from "./data-table-pagination-area";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { DataTableHeader } from "./data-table-header";
+import { Link } from "react-router-dom";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -100,10 +102,12 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="px-4 py-2" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <Link to={`/patient/${row.getValue("id")}`}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </Link>
                     </TableCell>
                   ))}
                 </TableRow>

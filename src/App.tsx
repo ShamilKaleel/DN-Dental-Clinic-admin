@@ -22,6 +22,7 @@ import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import Layout from "./Layout";
 import FeedbackPage from "@/pages/Feedback/FeedbackPage";
 import ContactUsPage from "@/pages/ContactUs/ContactUsPage";
+import PatientLogPage from "./pages/PatientLog/PatientLogPage";
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authState, isLording } = useAuth();
 
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/dentist" element={<DentistPage />} />
           <Route path="/patient" element={<PatientPage />} />
+          <Route path="/patient/:id" element={<PatientLogPage />} />
           <Route path="/receptionist" element={<ReceptionistPage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/appointment-list" element={<AppointmentListPage />} />

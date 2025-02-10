@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Patient } from "@/types/patient";
+import { Link } from "react-router-dom";
 
 export const columns: ColumnDef<Patient>[] = [
   {
