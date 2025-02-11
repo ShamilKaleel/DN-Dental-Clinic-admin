@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import PatientForm from "@/components/forms/patient-form";
+import PatientLogForm from "@/components/forms/log-form";
 import { Plus } from "lucide-react";
 import {
   Breadcrumb,
@@ -16,7 +16,11 @@ import {
 
 import { Link } from "react-router-dom";
 
-const PatientHeader: React.FC = () => {
+interface PatientHeaderProps {
+  patientID: string;
+}
+
+const PatientHeader: React.FC<PatientHeaderProps> = ({ patientID }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -28,7 +32,7 @@ const PatientHeader: React.FC = () => {
           title="Add Patient"
           className="sm:max-w-screen-md p-20"
         >
-          <PatientForm setIsOpen={setIsOpen} />
+          <PatientLogForm setIsOpen={setIsOpen} patientID={patientID} />
         </ResponsiveDialog>
         <h1 className="text-2xl font-bold ">Patient List</h1>
         <div className="flex gap-2 md:gap-5">

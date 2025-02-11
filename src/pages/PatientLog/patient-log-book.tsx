@@ -12,6 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useLog } from "@/hooks/useLog";
 
 // Import a default image
 
@@ -19,15 +20,18 @@ export default function PatientLog() {
   const { id } = useParams();
   const { getPatientById } = usePatient();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const { fetchLogs } = useLog();
   const DEFAULT_IMAGE_URL =
     "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
 
   useEffect(() => {
     const fetchPatient = async () => {
+      console.log(id);
       if (id) {
         try {
           const data = await getPatientById(id);
           setPatient(data);
+          fetchLogs(data.logs);
         } catch (error) {
           console.error("Error fetching patient details", error);
         }
@@ -43,7 +47,7 @@ export default function PatientLog() {
 
   return (
     <div>
-      <PatientHeader />
+      <PatientHeader patientID={patient.id} />
       <PatientDetails patient={patient} />
 
       <h2 className="text-2xl font-bold mt-6 mb-4">Patient Logs</h2>

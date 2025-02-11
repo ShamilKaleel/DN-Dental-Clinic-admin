@@ -1,5 +1,5 @@
 import { useSchedules } from "@/hooks/useSchedule";
-import PatientLog from "./patient-log";
+import PatientLog from "./patient-log-book";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
