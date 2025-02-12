@@ -6,8 +6,8 @@ interface PatientDetailsProps {
 
 export default function PatientDetails({ patient }: PatientDetailsProps) {
   return (
-    <Card>
-      <div className="flex gap-5 flex-wrap p-5">
+    <Card className="mt-5 w-full">
+      <div className="flex gap-5 flex-wrap p-5 ">
         <p>
           <strong>ID:</strong> {patient.id}
         </p>

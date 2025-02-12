@@ -42,8 +42,8 @@ export const PatientLogContext = createContext<{
   logState: PatientLogState;
   fetchLogs: (logs: PatientLog[]) => Promise<void>;
   createLog: (log: CreateLog, patientID: string) => Promise<void>;
-  deleteLog: (id: string) => Promise<void>;
-  getLogById: (id: string) => Promise<PatientLog>;
+  deleteLog: (patientId: string, id: string) => Promise<void>;
+  getLogById: (patientId: string, id: string) => Promise<PatientLog>;
 } | null>(null);
 
 // Provider
@@ -63,13 +63,15 @@ export const PatientLogProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CREATE_LOG", payload: response.data });
   };
 
-  const deleteLog = async (id: string) => {
-    await axiosInstance.delete(`/logs/${id}`);
+  const deleteLog = async (patientId: string, id: string) => {
+    await axiosInstance.delete(`/patients/${patientId}/logs/${id}`);
     dispatch({ type: "DELETE_LOG", payload: id });
   };
 
-  const getLogById = async (id: string) => {
-    const response = await axiosInstance.get<PatientLog>(`/logs/${id}`);
+  const getLogById = async (patientId: string, id: string) => {
+    const response = await axiosInstance.get<PatientLog>(
+      `/patients/${patientId}/logs/${id}`
+    );
     return response.data;
   };
 
