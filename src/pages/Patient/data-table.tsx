@@ -26,6 +26,8 @@ import {
 import PaginationArea from "./data-table-pagination-area";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { DataTableHeader } from "./data-table-header";
+import { Link } from "react-router-dom";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];

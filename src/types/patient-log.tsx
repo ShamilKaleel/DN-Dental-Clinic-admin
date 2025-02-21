@@ -13,3 +13,9 @@ export interface LogPhoto {
   description: string;
   timestamp: string;
 }
+
+export interface CreateLog {
+  actionType: string;
+  description: string;
+  dentistId: string;
+}

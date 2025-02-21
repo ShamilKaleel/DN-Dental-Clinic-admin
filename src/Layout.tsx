@@ -32,7 +32,7 @@ export default function Layout() {
     }
   };
   return (
-    <div className="xl:grid min-h-screen w-full grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
+    <div className="xl:grid min-h-screen w-full grid-cols-[220px_1fr] xl:grid-cols-[250px_1fr]">
       <div className="hidden border-r bg-muted dark:bg-muted/40 xl:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex  items-center border-b px-4  lg:px-6">

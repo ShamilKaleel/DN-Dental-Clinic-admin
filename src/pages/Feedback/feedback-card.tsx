@@ -8,12 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ToggleSwitch from "./feedback-toggle-input";
 
 const FeedbackCard: React.FC<Feedback> = ({
+  id,
   name,
   rating,
   email,
   comments,
+  showOnWebsite,
 }) => {
   return (
     <Card className=" w-full p-4 border rounded-lg shadow-md ">
@@ -23,15 +26,8 @@ const FeedbackCard: React.FC<Feedback> = ({
       {/* <p className="text-sm ">Date: {date}</p> */}
       <div className="flex items-center gap-2 mt-2">
         <label className="text-sm  w-48">Show in Page:</label>
-        <Select>
-          <SelectTrigger className={` border rounded-md px-2 py-1 text-sm `}>
-            <SelectValue placeholder="Show & Don't" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="show">Show</SelectItem>
-            <SelectItem value="don't">Don't</SelectItem>
-          </SelectContent>
-        </Select>
+
+        <ToggleSwitch feedbackID={id} checked={showOnWebsite} />
         {/* <select className="border rounded-md px-2 py-1 text-sm">
           <option value="show">Show</option>
           <option value="don't">Don't</option>
