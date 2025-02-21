@@ -4,4 +4,5 @@ export interface Feedback {
   email: string;
   rating: number;
   comments: string;
+  showOnWebsite: boolean;
 }

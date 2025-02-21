@@ -34,7 +34,7 @@ const PatientHeader: React.FC<PatientHeaderProps> = ({ patientID }) => {
         >
           <PatientLogForm setIsOpen={setIsOpen} patientID={patientID} />
         </ResponsiveDialog>
-        <h1 className="text-2xl font-bold ">Patient List</h1>
+        <h1 className="text-2xl font-bold ">Patient Details</h1>
         <div className="flex gap-2 md:gap-5">
           <Button
             className="btn btn-primary p-o"

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useLog } from "@/hooks/useLog";
 import { PatientLog } from "@/types/patient-log";
-import AddImageComponent from "./patient-log-add-image";
-import { Card } from "@/components/ui/card";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Lorder from "@/components/Lorder";
+import PatientLogg from "./patient-log";
 const PatientLogDetails = () => {
   const { id, logID } = useParams<{
     id: string;
@@ -29,36 +29,33 @@ const PatientLogDetails = () => {
     fetchLog();
   }, [id, logID, getLogById]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className=" flex w-full h-screen justify-center items-center">
+        <Lorder />
+      </div>
+    );
   if (!log) return <p>No log found.</p>;
 
   return (
-    <div className="w-full p-6  ">
-      <h2 className="text-2xl font-bold ">Action Type: {log.actionType}</h2>
-      <p className="">Description: {log.description}</p>
-      <p className="">Docter: {log.dentistName}</p>
-      <p className="">Timestamp: {new Date(log.timestamp).toLocaleString()}</p>
-
-      <div className="mt-4">
-        {log.photos.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {log.photos.map((photo) => (
-              <img
-                key={photo.id}
-                src={photo.url}
-                alt={photo.description}
-                className="w-full h-32 object-cover rounded-lg shadow-md"
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-4">
-            <p className="text-gray-500">No images available.</p>
-            <AddImageComponent patientID={id!} logID={logID!} />
-          </div>
-        )}
+    <>
+      <div className="flex flex-col">
+        <div className="pb-5 px-2 lg:px-0">
+          <Tabs defaultValue="logbook">
+            <TabsList className=" ">
+              <TabsTrigger value="logbook">Log Book </TabsTrigger>
+              <TabsTrigger value="analysis">Not ready</TabsTrigger>
+            </TabsList>
+            <TabsContent value="logbook">
+              <PatientLogg log={log} patientID={id!} />
+            </TabsContent>
+            <TabsContent value="analysis">
+              <div>hi</div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

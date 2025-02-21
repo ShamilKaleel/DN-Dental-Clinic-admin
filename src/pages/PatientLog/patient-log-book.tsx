@@ -5,36 +5,31 @@ import { Patient } from "@/types/patient";
 import PatientDetails from "./patient-details";
 import PatientHeader from "./patient-log-book-header";
 import PatientLogs from "./patient-logs";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import Lorder from "@/components/Lorder";
 import { useLog } from "@/hooks/useLog";
 
 // Import a default image
 
-export default function PatientLog() {
+export default function PatientLogBook() {
   const { id } = useParams();
   const { getPatientById } = usePatient();
   const [patient, setPatient] = useState<Patient | null>(null);
   const { fetchLogs } = useLog();
-  const DEFAULT_IMAGE_URL =
-    "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+  const [isLoading, setIsLoading] = useState(true); // Renamed to isLoading
 
   useEffect(() => {
     const fetchPatient = async () => {
       console.log(id);
       if (id) {
+        setIsLoading(true); // Set loading to true before fetching data
         try {
           const data = await getPatientById(id);
           setPatient(data);
           fetchLogs(data.logs);
         } catch (error) {
           console.error("Error fetching patient details", error);
+        } finally {
+          setIsLoading(false); // Set loading to false after fetching
         }
       }
     };
@@ -42,8 +37,14 @@ export default function PatientLog() {
     fetchPatient();
   }, [id, getPatientById]);
 
+  if (isLoading) {
+    <div className=" flex w-full h-screen justify-center items-center">
+      <Lorder />
+    </div>;
+  }
+
   if (!patient) {
-    return <p>Loading patient details...</p>;
+    return <p>No patient data found.</p>;
   }
 
   return (

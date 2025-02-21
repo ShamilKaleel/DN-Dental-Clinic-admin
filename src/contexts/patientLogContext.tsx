@@ -1,13 +1,15 @@
 import { createContext, useReducer, ReactNode, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { PatientLog, CreateLog } from "@/types/patient-log";
+import { LogPhoto } from "@/types/patient-log";
 import { useAuth } from "@/hooks/useAuth";
 
 // Actions for Patient Log
 type PatientLogAction =
   | { type: "FETCH_LOGS"; payload: PatientLog[] }
   | { type: "CREATE_LOG"; payload: PatientLog }
-  | { type: "DELETE_LOG"; payload: string };
+  | { type: "DELETE_LOG"; payload: string }
+  | { type: "UPDATE_LOG"; payload: { logID: string; newPhoto: LogPhoto } };
 
 // Patient Log state
 interface PatientLogState {
@@ -32,6 +34,14 @@ const patientLogReducer = (
       return {
         logs: state.logs.filter((log) => log.id !== action.payload),
       };
+    case "UPDATE_LOG":
+      return {
+        logs: state.logs.map((log) =>
+          log.id === action.payload.logID
+            ? { ...log, photos: [...log.photos, action.payload.newPhoto] }
+            : log
+        ),
+      };
     default:
       return state;
   }
@@ -44,6 +54,11 @@ export const PatientLogContext = createContext<{
   createLog: (log: CreateLog, patientID: string) => Promise<void>;
   deleteLog: (patientId: string, id: string) => Promise<void>;
   getLogById: (patientId: string, id: string) => Promise<PatientLog>;
+  addPhotoToLog: (
+    patientID: string,
+    logID: string,
+    key: string
+  ) => Promise<void>;
 } | null>(null);
 
 // Provider
@@ -75,6 +90,30 @@ export const PatientLogProvider = ({ children }: { children: ReactNode }) => {
     return response.data;
   };
 
+  const addPhotoToLog = async (
+    patientID: string,
+    logID: string,
+    key: string
+  ) => {
+    const response = await axiosInstance.post<LogPhoto>(
+      `/patients/${patientID}/logs/${logID}/photos`,
+      {
+        s3Keys: [key],
+      },
+      {
+        withCredentials: true, // Ensures cookies and credentials are sent
+      }
+    );
+
+    const newPhoto = response.data;
+
+    // Update the specific log in the state
+    dispatch({
+      type: "UPDATE_LOG",
+      payload: { logID, newPhoto },
+    });
+  };
+
   return (
     <PatientLogContext.Provider
       value={{
@@ -83,6 +122,7 @@ export const PatientLogProvider = ({ children }: { children: ReactNode }) => {
         createLog,
         deleteLog,
         getLogById,
+        addPhotoToLog,
       }}
     >
       {children}
