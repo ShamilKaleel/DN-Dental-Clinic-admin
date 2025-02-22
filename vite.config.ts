@@ -9,16 +9,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            return id.split("node_modules/")[1].split("/")[0]; // Splits vendor dependencies
-          }
-        },
-      },
-    },
-    chunkSizeWarningLimit: 1000, // Increase the warning limit
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
   },
 });
